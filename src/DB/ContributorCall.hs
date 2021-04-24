@@ -1,15 +1,14 @@
 {-# LANGUAGE OverloadedLists #-}
 module DB.ContributorCall where
 
-import Data.UUID (UUID)
-import Database.PostgreSQL.Simple.FromField ( FromField )
-import Data.Aeson ( FromJSON, ToJSON )
-import Database.PostgreSQL.Simple.ToField ( ToField )
-import Database.PostgreSQL.Simple ( ToRow, FromRow, Only(Only) )
+import Data.Aeson (FromJSON, ToJSON)
 import Data.Time (UTCTime)
-import Database.PostgreSQL.Entity
-    ( insert, selectById, Entity(..), delete )
-import Database.PostgreSQL.Transact ( DBT )
+import Data.UUID (UUID)
+import Database.PostgreSQL.Entity (Entity (..), delete, insert, selectById)
+import Database.PostgreSQL.Simple (FromRow, Only (Only), ToRow)
+import Database.PostgreSQL.Simple.FromField (FromField)
+import Database.PostgreSQL.Simple.ToField (ToField)
+import Database.PostgreSQL.Transact (DBT)
 
 import DB.Repository (RepositoryId)
 
@@ -20,11 +19,11 @@ newtype ContributorCallId
 
 data ContributorCall
   = ContributorCall { contributorCallId :: ContributorCallId
-                    , repositoryId :: RepositoryId
-                    , title :: Text
-                    , description :: Text
-                    , createdAt   :: UTCTime
-                    , updatedAt   :: UTCTime
+                    , repositoryId      :: RepositoryId
+                    , title             :: Text
+                    , description       :: Text
+                    , createdAt         :: UTCTime
+                    , updatedAt         :: UTCTime
                     }
     deriving stock (Eq, Generic, Show)
     deriving anyclass (FromRow, ToRow)

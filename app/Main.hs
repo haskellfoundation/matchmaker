@@ -1,4 +1,6 @@
 module Main where
 
+import Server
+
 main :: IO ()
-main = putTextLn "Hello"
+main = startWebService

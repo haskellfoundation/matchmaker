@@ -1,5 +1,5 @@
-{-# LANGUAGE DerivingVia #-}
-{-# LANGUAGE OverloadedLists #-}
+{-# LANGUAGE DerivingVia          #-}
+{-# LANGUAGE OverloadedLists      #-}
 {-# LANGUAGE UndecidableInstances #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module DB.User where
@@ -9,7 +9,8 @@ import Data.Password.Argon2 (Argon2, Password, PasswordCheck (..), PasswordHash)
 import qualified Data.Password.Argon2 as Argon2
 import Data.Time (UTCTime)
 import Data.UUID (UUID)
-import Database.PostgreSQL.Entity (Entity (..), delete, insert, selectById, selectOneByField)
+import Database.PostgreSQL.Entity (Entity (..), delete, insert, selectById,
+                                   selectOneByField)
 import Database.PostgreSQL.Simple (Only (Only))
 import Database.PostgreSQL.Simple.FromField (FromField (..))
 import Database.PostgreSQL.Simple.FromRow (FromRow (..))

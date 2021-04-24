@@ -1,18 +1,18 @@
 {-# LANGUAGE OverloadedLists #-}
 module DB.Repository where
 
-import Data.UUID (UUID)
-import Database.PostgreSQL.Simple.FromField ( FromField )
-import Data.Aeson ( FromJSON, ToJSON )
-import Database.PostgreSQL.Simple.ToField ( ToField )
-import Database.PostgreSQL.Simple ( ToRow, FromRow, Only(Only) )
+import Data.Aeson (FromJSON, ToJSON)
 import Data.Time (UTCTime)
-import Database.PostgreSQL.Entity
-    ( insert, selectById, selectOneByField, Entity(..), delete, selectManyByField )
-import Database.PostgreSQL.Transact ( DBT )
+import Data.UUID (UUID)
+import Database.PostgreSQL.Entity (Entity (..), delete, insert, selectById,
+                                   selectManyByField, selectOneByField)
+import Database.PostgreSQL.Simple (FromRow, Only (Only), ToRow)
+import Database.PostgreSQL.Simple.FromField (FromField)
+import Database.PostgreSQL.Simple.ToField (ToField)
+import Database.PostgreSQL.Transact (DBT)
 
-import DB.Organisation (OrganisationId (..))
 import Data.Vector (Vector)
+import DB.Organisation (OrganisationId (..))
 
 newtype RepositoryId
   = RepositoryId { getRepositoryId :: UUID }
@@ -20,14 +20,14 @@ newtype RepositoryId
   deriving newtype (FromField, FromJSON, Show, ToField, ToJSON)
 
 data Repository
-  = Repository { repositoryId :: RepositoryId
-               , organisationId :: OrganisationId
-               , repositoryName :: Text
+  = Repository { repositoryId          :: RepositoryId
+               , organisationId        :: OrganisationId
+               , repositoryName        :: Text
                , repositoryDescription :: Text
-               , repositoryURL :: Text
-               , repositoryHomepage :: Maybe Text
-               , createdAt   :: UTCTime
-               , updatedAt   :: UTCTime
+               , repositoryURL         :: Text
+               , repositoryHomepage    :: Maybe Text
+               , createdAt             :: UTCTime
+               , updatedAt             :: UTCTime
                }
     deriving stock (Eq, Generic, Show)
     deriving anyclass (FromRow, ToRow)

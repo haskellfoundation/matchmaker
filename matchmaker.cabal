@@ -36,6 +36,7 @@ common common-extensions
                       RecordWildCards
                       ScopedTypeVariables
                       StandaloneDeriving
+                      TemplateHaskell
                       TypeApplications
                       TypeOperators
   default-language: Haskell2010
@@ -44,6 +45,7 @@ common common-ghc-options
   ghc-options: -Wall
                -Wcompat
                -Werror
+               -Wno-deprecations
                -Widentities
                -Wincomplete-record-updates
                -Wincomplete-uni-patterns
@@ -67,13 +69,29 @@ library
   hs-source-dirs:
     src
   exposed-modules:
-    DB.User
+    DB.ContributorCall
     DB.Organisation
     DB.Repository
-    DB.ContributorCall
+    DB.User
+    Environment
+    Server
+    Web.Controller.Home
+    Web.Router
+    Web.Session
+    Web.Templates
+    Web.Templates.Helpers
+    Web.Templates.Types
+    Web.Types
+    Web.View.Home
   build-depends:
     aeson                       ^>= 1.5,
     base                        ^>= 4.14.1,
+    base64-bytestring           ^>= 1.0,
+    cryptonite                  ^>= 0.28,
+    colourista                  ^>= 0.1,
+    envparse                    ^>= 0.4,
+    ginger                      ^>= 0.10,
+    hashable                    ^>= 1.3,
     mtl                         ^>= 2.2.2,
     password                    ^>= 3.0,
     pg-entity                   ^>= 0.0,
@@ -82,8 +100,13 @@ library
     postgresql-simple-migration ^>= 0.1,
     relude                      ^>= 1.0,
     resource-pool               ^>= 0.2,
+    safe-exceptions             ^>= 0.1,
     scotty                      ^>= 0.12,
+    stm                         ^>= 2.5,
+    template-haskell            ^>= 2.16,
+    text                        ^>= 1.2,
     time                        ^>= 1.9,
+    unordered-containers        ^>= 0.2,
     uuid                        ^>= 1.3,
     vector                      ^>= 0.12.1,
     wai                         ^>= 3.2,
@@ -97,7 +120,7 @@ library
                  , Relude.Monad
                  )
 
-executable control-plane
+executable matchmaker
   import: common-extensions
   import: common-ghc-options
   import: common-rts-options
@@ -114,10 +137,11 @@ executable control-plane
                  , Relude.Monad
                  )
 
-test-suite control-plane-test
+test-suite matchmaker-test
   import: common-extensions
   import: common-ghc-options
   import: common-rts-options
+  ghc-options: -Wdeprecations
   type: exitcode-stdio-1.0
   main-is: Main.hs
   hs-source-dirs:
