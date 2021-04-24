@@ -1,23 +1,23 @@
-# Matchmaker ![CI-badge][CI-badge]][CI-url] ![simple-haskell][simple-haskell]
+# Matchmaker [![CI-badge][CI-badge]][CI-url] ![simple-haskell][simple-haskell]
+
+<img src="./resources/matchmaker-frontpage.png">
 
 ## Description
+
+*Matchmaker* is a project of the Haskell Foundation to help open-source maintainers and contributors find each-other,
+and provide a smoother experience for people wishing to invest themselves in the opens-source Haskell ecosystem.
 
 ## Build
 
 ### Backend
 
 ```bash
-$ cabal build -O2
+$ make build
 ```
-
 ### Frontend
 
-Go in the `assets/` directory and run
-
 ```bash
-$ yarn install
-$ yarn build
-
+$ make assets-build
 ```
 
 ## Run
@@ -25,15 +25,13 @@ $ yarn build
 ### Backend
 
 ```bash
-$ cabal run exe matchmaker-server
+$ cabal run matchmaker
 ```
 
 ### Frontend
 
-In a development setup, go in the `assets/` directory and run:
-
-```
-$ webpack -w --config webpack/webpack.config.js
+```bash
+$ make assets-watch
 ```
 
 [simple-haskell]: https://img.shields.io/badge/Simple-Haskell-purple?style=flat-square

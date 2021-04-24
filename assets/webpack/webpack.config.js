@@ -2,7 +2,8 @@
 
 const path = require("path");
 const { WebpackManifestPlugin } = require("webpack-manifest-plugin");
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+const HtmlWebpackPlugin = require("html-webpack-plugin")
+const CopyPlugin = require("copy-webpack-plugin");
 
 const postCss = {
   loader: "postcss-loader",
@@ -39,6 +40,13 @@ module.exports = {
         test: /\.css$/i,
         use: ["style-loader", cssLoader, postCss],
       },
+      {
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        type: "asset/resource",
+          generator: {
+              filename: "${publicPath}/[name][ext]"
+          }
+      },
     ],
   },
   plugins: [
@@ -50,6 +58,11 @@ module.exports = {
     new WebpackManifestPlugin({
       writeToFileEmit: true,
       publicPath,
+    }),
+    new CopyPlugin({
+      patterns: [
+        { from: "images", to: publicPath },
+      ],
     }),
   ]
 };
