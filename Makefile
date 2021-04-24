@@ -14,6 +14,9 @@ db-reset: ## Reset the dev database
 assets-build: ## Build the web assets
 	@cd assets/ && yarn webpack --config webpack/webpack.config.js
 
+assets-watch: ## Continuously rebuild the web assets
+	@cd assets/ && yarn webpack -w --config webpack/webpack.config.js
+
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.* ?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 

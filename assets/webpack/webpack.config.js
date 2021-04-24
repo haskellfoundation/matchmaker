@@ -43,7 +43,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      filename: "../src/Web/Templates/Layout/layout.jinja",
+      filename: "../src/Web/Templates/Layout/layout.html",
       template: "./layout.jinja.template",
       inject: false,
     }),
