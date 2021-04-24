@@ -1,0 +1,59 @@
+Html Webpack Plugin:
+<pre>
+  Error: Child compilation failed:
+  Module not found: Error: Can't resolve '/home/hecate/Projects/matchmaker/assets/layout.mst.template' in '/home/hecate/Projects/matchmaker/assets'
+  ModuleNotFoundError: Module not found: Error: Can't resolve '/home/hecate/Projects/matchmaker/assets/layout.mst.template' in '/home/hecate/Projects/matchmaker/assets'
+  
+  - Compilation.js:1735 
+    [assets]/[webpack]/lib/Compilation.js:1735:28
+  
+  - NormalModuleFactory.js:726 
+    [assets]/[webpack]/lib/NormalModuleFactory.js:726:13
+  
+  
+  - NormalModuleFactory.js:273 
+    [assets]/[webpack]/lib/NormalModuleFactory.js:273:22
+  
+  
+  - NormalModuleFactory.js:402 
+    [assets]/[webpack]/lib/NormalModuleFactory.js:402:22
+  
+  - NormalModuleFactory.js:117 
+    [assets]/[webpack]/lib/NormalModuleFactory.js:117:11
+  
+  - NormalModuleFactory.js:642 
+    [assets]/[webpack]/lib/NormalModuleFactory.js:642:24
+  
+  - NormalModuleFactory.js:796 
+    [assets]/[webpack]/lib/NormalModuleFactory.js:796:8
+  
+  - NormalModuleFactory.js:916 
+    [assets]/[webpack]/lib/NormalModuleFactory.js:916:5
+  
+  - child-compiler.js:169 
+    [assets]/[html-webpack-plugin]/lib/child-compiler.js:169:18
+  
+  - Compiler.js:534 
+    [assets]/[webpack]/lib/Compiler.js:534:11
+  
+  - Compiler.js:1089 
+    [assets]/[webpack]/lib/Compiler.js:1089:17
+  
+  
+  - Hook.js:18 Hook.CALL_ASYNC_DELEGATE [as _callAsync]
+    [assets]/[tapable]/lib/Hook.js:18:14
+  
+  - Compiler.js:1085 
+    [assets]/[webpack]/lib/Compiler.js:1085:33
+  
+  - Compilation.js:2496 
+    [assets]/[webpack]/lib/Compilation.js:2496:11
+  
+  
+  - Hook.js:18 Hook.CALL_ASYNC_DELEGATE [as _callAsync]
+    [assets]/[tapable]/lib/Hook.js:18:14
+  
+  - Compilation.js:2489 
+    [assets]/[webpack]/lib/Compilation.js:2489:38
+  
+</pre>

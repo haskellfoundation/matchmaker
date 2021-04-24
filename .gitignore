@@ -1,0 +1,10 @@
+/.stack-work/
+deployments/prod.sh
+.envrc
+Session.vim
+.hie
+/static/*
+assets/node_modules
+dist-newstyle
+<
+.hspec-failures

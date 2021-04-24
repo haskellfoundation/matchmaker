@@ -1,0 +1,118 @@
+{-# LANGUAGE OverloadedLists #-}
+{-# LANGUAGE QuasiQuotes     #-}
+module DB.Organisation where
+
+import Data.Aeson (FromJSON, ToJSON)
+import Data.Time (UTCTime)
+import Data.UUID (UUID)
+import Database.PostgreSQL.Entity (Entity (..), delete, insert, selectById,
+                                   selectOneByField, update, _select,
+                                   _selectWhere)
+import Database.PostgreSQL.Simple (FromRow, Only (Only), ToRow)
+import Database.PostgreSQL.Simple.FromField (FromField)
+import Database.PostgreSQL.Simple.ToField (ToField)
+import Database.PostgreSQL.Transact (DBT)
+
+import Data.Vector (Vector)
+import Database.PostgreSQL.Entity.DBT (QueryNature (Select), query, queryOne,
+                                       query_)
+import Database.PostgreSQL.Simple.SqlQQ (sql)
+import DB.User (User, UserId)
+
+newtype OrganisationId
+  = OrganisationId { getOrganisationId :: UUID }
+  deriving stock (Eq, Generic)
+  deriving newtype (FromField, FromJSON, Show, ToField, ToJSON)
+
+data Organisation
+  = Organisation { organisationId   :: OrganisationId
+                 , organisationName :: Text
+                 , createdAt        :: UTCTime
+                 , updatedAt        :: UTCTime
+                 }
+    deriving stock (Eq, Generic, Show)
+    deriving anyclass (FromRow, ToRow)
+
+instance Entity Organisation where
+  tableName = "organisations"
+  primaryKey = "organisation_id"
+  fields = [ "organisation_id"
+           , "organisation_name"
+           , "created_at"
+           , "updated_at"
+           ]
+
+newtype UserOrganisationId
+  = UserOrganisationId { getUserOrganisationId :: UUID }
+  deriving stock (Eq, Generic)
+  deriving newtype (FromField, FromJSON, Show, ToField, ToJSON)
+
+data UserOrganisation
+  = UserOrganisation { userOrganisationId :: UserOrganisationId
+                     , userId             :: UserId
+                     , organisationId     :: OrganisationId
+                     , isAdmin            :: Bool
+                     }
+    deriving stock (Eq, Generic, Show)
+    deriving anyclass (FromRow, ToRow)
+
+instance Entity UserOrganisation where
+    tableName = "user_organisation"
+    primaryKey = "user_organisation_id"
+    fields = [ "user_organisation_id"
+             , "user_id"
+             , "organisation_id"
+             , "is_admin"
+             ]
+
+insertOrganisation :: Organisation -> DBT IO ()
+insertOrganisation org = insert @Organisation org
+
+getOrganisationById :: OrganisationId -> DBT IO Organisation
+getOrganisationById orgId = selectById @Organisation (Only orgId)
+
+getOrganisationByName :: Text -> DBT IO Organisation
+getOrganisationByName name = selectOneByField "organisation_name" (Only name)
+
+deleteOrganisation :: OrganisationId -> DBT IO ()
+deleteOrganisation orgId = delete @Organisation (Only orgId)
+
+getAllUserOrganisations :: DBT IO (Vector UserOrganisation)
+getAllUserOrganisations = query_ Select (_select @UserOrganisation)
+
+getUserOrganisationById :: UserOrganisationId -> DBT IO UserOrganisation
+getUserOrganisationById uoId = selectById @UserOrganisation (Only uoId)
+
+getUserOrganisation :: UserId -> OrganisationId -> DBT IO UserOrganisation
+getUserOrganisation userId orgId = queryOne Select q (userId, orgId)
+    where q = _selectWhere @UserOrganisation ["user_id", "organisation_id"]
+
+makeAdmin :: UserId -> OrganisationId -> DBT IO ()
+makeAdmin userId organisationId = do
+  uo <- getUserOrganisation userId organisationId
+  let newUO = uo{isAdmin = True}
+  update @UserOrganisation newUO
+
+attachUser :: UserId -> OrganisationId -> UserOrganisationId -> DBT IO ()
+attachUser userId organisationId uoId = do
+  insert @UserOrganisation (UserOrganisation uoId userId organisationId False)
+
+getUsers :: OrganisationId -> DBT IO (Vector User)
+getUsers orgId = query Select q (Only orgId)
+    where q = [sql|
+        SELECT u.user_id, u.username, u.display_name, u.password, u.created_at, u.updated_at
+        FROM users AS u
+            JOIN user_organisation AS uo
+                ON u.user_id = uo.user_id
+        WHERE uo.organisation_id = ?
+        |]
+
+getAdmins :: OrganisationId -> DBT IO (Vector User)
+getAdmins orgId = query Select q (Only orgId)
+    where q = [sql|
+        SELECT u.user_id, u.username, u.display_name, u.password, u.created_at, u.updated_at
+        FROM users AS u
+            JOIN user_organisation AS uo
+                ON uo.user_id = u.user_id
+        WHERE uo.organisation_id = ? AND uo.is_admin = true
+        |]
