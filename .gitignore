@@ -8,3 +8,4 @@ assets/node_modules
 dist-newstyle
 <
 .hspec-failures
+./src/Web/Templates/Layout/layout.html

@@ -1,3 +1,9 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
+
+@media (max-width:736px) {
+  div.optional {
+    display: none;
+  }
+}
