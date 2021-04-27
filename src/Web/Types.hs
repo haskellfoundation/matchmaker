@@ -1,7 +1,11 @@
-module Web.Types where
+module Web.Types
+  ( WebM (..)
+  , WebEnvironment (..)
+  , runWebM
+  ) where
 
 import Database.PostgreSQL.Entity.DBT
-import Web.Session (ScottySM, UserAssigns)
+import Web.Sessions (ScottySM, UserAssigns)
 
 newtype WebM a
   = WebM { getWeb :: ReaderT WebEnvironment IO a }

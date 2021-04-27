@@ -9,7 +9,7 @@ license:          MIT
 build-type:       Simple
 extra-source-files:
     CHANGELOG.md
-    LICENSE.md
+    LICENSE
     README.md
 
 source-repository head
@@ -76,8 +76,10 @@ library
     Environment
     Server
     Web.Controller.Home
+    Web.Controller.Session
+    Web.Helpers
     Web.Router
-    Web.Session
+    Web.Sessions
     Web.Templates
     Web.Templates.Helpers
     Web.Templates.Types

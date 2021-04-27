@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings   #-}
 {-# LANGUAGE ScopedTypeVariables #-}
-module Web.Session
+module Web.Sessions
   ( createSessionManager
   , modifySession
   , readSession
@@ -77,9 +77,7 @@ modifySession :: (MonadIO m, ScottyError e)
               -> ActionT e m ()
 modifySession sm@(ScottySM storage) fun = do
   oldS <- readSession' sm id
-  putTextLn "=== Old session:"
   let newS = oldS {sess_content = fun (sess_content oldS)}
-  putTextLn "=== New session:"
   liftIO $ insertSession newS storage
 
 -- | Read the current users session or create one if it does not exists.

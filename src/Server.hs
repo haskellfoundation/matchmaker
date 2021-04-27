@@ -7,7 +7,7 @@ import Web.Scotty.Trans (Options (Options), scottyOptsT)
 
 import Environment (MatchmakerEnv (..), mkEnv)
 import Web.Router (router)
-import Web.Session (createSessionManager)
+import Web.Sessions (createSessionManager)
 import Web.Types (WebEnvironment (..), WebM, runWebM)
 
 startWebService :: IO ()

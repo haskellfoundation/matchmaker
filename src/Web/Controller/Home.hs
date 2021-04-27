@@ -1,12 +1,11 @@
 module Web.Controller.Home where
 
-import Web.Scotty.Trans (ActionT, html)
+import Web.Scotty.Trans
 
-import Web.Types (WebM)
-import qualified Web.View.Home as Home
+import Web.Types
+import qualified Web.View.Home as HomeView
 
 index :: ActionT LText WebM ()
 index = do
-  result <- Home.index
+  result <- HomeView.index
   html result
-

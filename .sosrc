@@ -1,0 +1,8 @@
+- pattern: src/(.*)\.hs
+  commands:
+  - cabal build -j10
+  - cabal run matchmaker
+
+- pattern: test/(.*)\.hs
+  commands:
+  - cabal test

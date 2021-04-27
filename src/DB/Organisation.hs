@@ -100,7 +100,7 @@ attachUser userId organisationId uoId = do
 getUsers :: OrganisationId -> DBT IO (Vector User)
 getUsers orgId = query Select q (Only orgId)
     where q = [sql|
-        SELECT u.user_id, u.username, u.display_name, u.password, u.created_at, u.updated_at
+        SELECT u.user_id, u.username, u.email, u.display_name, u.password, u.created_at, u.updated_at
         FROM users AS u
             JOIN user_organisation AS uo
                 ON u.user_id = uo.user_id
@@ -110,7 +110,7 @@ getUsers orgId = query Select q (Only orgId)
 getAdmins :: OrganisationId -> DBT IO (Vector User)
 getAdmins orgId = query Select q (Only orgId)
     where q = [sql|
-        SELECT u.user_id, u.username, u.display_name, u.password, u.created_at, u.updated_at
+        SELECT u.user_id, u.username, u.email, u.display_name, u.password, u.created_at, u.updated_at
         FROM users AS u
             JOIN user_organisation AS uo
                 ON uo.user_id = u.user_id

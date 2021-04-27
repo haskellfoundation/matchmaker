@@ -9,6 +9,7 @@ import Data.Password.Argon2 (Argon2, Password, PasswordCheck (..), PasswordHash)
 import qualified Data.Password.Argon2 as Argon2
 import Data.Time (UTCTime)
 import Data.UUID (UUID)
+import qualified Data.UUID as UUID
 import Database.PostgreSQL.Entity (Entity (..), delete, insert, selectById,
                                    selectOneByField)
 import Database.PostgreSQL.Simple (Only (Only))
@@ -24,9 +25,13 @@ newtype UserId
   deriving stock (Eq, Generic)
   deriving newtype (FromField, FromJSON, Show, ToField, ToJSON)
 
+instance ToText UserId where
+  toText (UserId uuid) = UUID.toText uuid
+
 data User
   = User { userId      :: UserId
          , username    :: Text
+         , email       :: Text
          , displayName :: Text
          , password    :: PasswordHash Argon2
          , createdAt   :: UTCTime
@@ -40,6 +45,7 @@ instance Entity User where
   primaryKey = "user_id"
   fields = [ "user_id"
            , "username"
+           , "email"
            , "display_name"
            , "password"
            , "created_at"
@@ -74,10 +80,13 @@ insertUser :: User -> DBT IO ()
 insertUser user = insert @User user
 
 getUserById :: UserId -> DBT IO User
-getUserById userId = selectById @User (Only userId)
+getUserById userId = selectById (Only userId)
 
 getUserByUsername :: Text -> DBT IO User
 getUserByUsername username = selectOneByField "username" (Only username)
+
+getUserByEmail :: Text -> DBT IO User
+getUserByEmail email = selectOneByField "email" (Only email)
 
 deleteUser :: UserId -> DBT IO ()
 deleteUser userId = delete @User (Only userId)

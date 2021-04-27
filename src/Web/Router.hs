@@ -9,6 +9,7 @@ import Network.Wai.Middleware.Static
 import Web.Scotty.Trans (ScottyT, get, middleware, post)
 
 import qualified Web.Controller.Home as Home
+import qualified Web.Controller.Session as Session
 import Web.Types
 
 router :: ScottyT LText WebM ()
@@ -17,5 +18,6 @@ router = do
   middleware $ staticPolicy noDots
   middleware simpleCors
 
-  get "/" Home.index
-
+  get "/"              Home.index
+  get "/login"         Session.new
+  post "/login/signin" Session.create
