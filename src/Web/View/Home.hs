@@ -5,33 +5,22 @@ import Database.PostgreSQL.Entity.DBT
 import Web.Scotty.Trans (ActionT)
 
 import DB.User (User (..), getUserById)
-import Web.Helpers
+import Web.Auth
 import Web.Templates (render)
 import Web.Templates.Helpers (moduleName)
 import Web.Templates.Types (TemplateAssigns (TemplateAssigns),
                             TemplateName (TemplateName))
-import Web.Types (WebEnvironment (..), WebM)
+import Web.Types (WebEnvironment (..), WebM, MatchmakerError)
 
-index :: ActionT LText WebM LText
+index :: ActionT MatchmakerError WebM LText
 index = do
   pool <- asks pgPool
   let template = TemplateName "index"
-  isAuthed <- isUserAuthenticated
-  assigns  <- if isAuthed
-              then do
-                result <- getUserId
-                case result of
-                  Nothing -> undefined
+  result <- getUserIdFromSession
+  assigns  <- case result of
+                  Nothing ->
+                    pure $ TemplateAssigns $ HashMap.empty
                   Just uId -> do
-                    dbUser <- liftIO $ runDB pool $ getUserById uId
-                    case dbUser of
-                      Right user ->
-                        pure $ TemplateAssigns $ HashMap.fromList [("displayName", displayName user)]
-                      Left _ -> pure $ TemplateAssigns HashMap.empty
-              else pure $ TemplateAssigns HashMap.empty
+                    (Just user) <- liftIO $ runDB pool $ getUserById uId
+                    pure $ TemplateAssigns $ HashMap.fromList [("displayName", displayName user)]
   render $$(moduleName) template assigns
-
-login :: ActionT LText WebM LText
-login = render $$(moduleName) template (TemplateAssigns HashMap.empty)
-  where
-    template = TemplateName "login"

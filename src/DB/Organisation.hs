@@ -18,6 +18,7 @@ import Database.PostgreSQL.Entity.DBT (QueryNature (Select), query, queryOne,
                                        query_)
 import Database.PostgreSQL.Simple.SqlQQ (sql)
 import DB.User (User, UserId)
+import Data.Maybe (fromJust)
 
 newtype OrganisationId
   = OrganisationId { getOrganisationId :: UUID }
@@ -68,10 +69,10 @@ instance Entity UserOrganisation where
 insertOrganisation :: Organisation -> DBT IO ()
 insertOrganisation org = insert @Organisation org
 
-getOrganisationById :: OrganisationId -> DBT IO Organisation
+getOrganisationById :: OrganisationId -> DBT IO (Maybe Organisation)
 getOrganisationById orgId = selectById @Organisation (Only orgId)
 
-getOrganisationByName :: Text -> DBT IO Organisation
+getOrganisationByName :: Text -> DBT IO (Maybe Organisation)
 getOrganisationByName name = selectOneByField "organisation_name" (Only name)
 
 deleteOrganisation :: OrganisationId -> DBT IO ()
@@ -80,16 +81,16 @@ deleteOrganisation orgId = delete @Organisation (Only orgId)
 getAllUserOrganisations :: DBT IO (Vector UserOrganisation)
 getAllUserOrganisations = query_ Select (_select @UserOrganisation)
 
-getUserOrganisationById :: UserOrganisationId -> DBT IO UserOrganisation
+getUserOrganisationById :: UserOrganisationId -> DBT IO (Maybe UserOrganisation)
 getUserOrganisationById uoId = selectById @UserOrganisation (Only uoId)
 
-getUserOrganisation :: UserId -> OrganisationId -> DBT IO UserOrganisation
+getUserOrganisation :: UserId -> OrganisationId -> DBT IO (Maybe UserOrganisation)
 getUserOrganisation userId orgId = queryOne Select q (userId, orgId)
     where q = _selectWhere @UserOrganisation ["user_id", "organisation_id"]
 
 makeAdmin :: UserId -> OrganisationId -> DBT IO ()
 makeAdmin userId organisationId = do
-  uo <- getUserOrganisation userId organisationId
+  uo <- fromJust <$> getUserOrganisation userId organisationId
   let newUO = uo{isAdmin = True}
   update @UserOrganisation newUO
 

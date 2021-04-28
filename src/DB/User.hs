@@ -1,7 +1,7 @@
 {-# LANGUAGE DerivingVia          #-}
 {-# LANGUAGE OverloadedLists      #-}
 {-# LANGUAGE UndecidableInstances #-}
-{-# OPTIONS_GHC -fno-warn-orphans #-}
+{-# OPTIONS_GHC -fno-warn-orphans -Wno-redundant-constraints #-}
 module DB.User where
 
 import Data.Aeson (FromJSON (..), ToJSON (..))
@@ -12,6 +12,7 @@ import Data.UUID (UUID)
 import qualified Data.UUID as UUID
 import Database.PostgreSQL.Entity (Entity (..), delete, insert, selectById,
                                    selectOneByField)
+import Database.PostgreSQL.Entity.DBT
 import Database.PostgreSQL.Simple (Only (Only))
 import Database.PostgreSQL.Simple.FromField (FromField (..))
 import Database.PostgreSQL.Simple.FromRow (FromRow (..))
@@ -79,14 +80,14 @@ validatePassword inputPassword hashedPassword =
 insertUser :: User -> DBT IO ()
 insertUser user = insert @User user
 
-getUserById :: UserId -> DBT IO User
+getUserById :: UserId -> DBT IO (Maybe User)
 getUserById userId = selectById (Only userId)
 
-getUserByUsername :: Text -> DBT IO User
+getUserByUsername :: Text -> DBT IO (Maybe User)
 getUserByUsername username = selectOneByField "username" (Only username)
 
-getUserByEmail :: Text -> DBT IO User
-getUserByEmail email = selectOneByField "email" (Only email)
+getUserByEmail :: (HasCallStack, MonadIO m) => ConnectionPool -> Text -> m (Maybe User)
+getUserByEmail pool email = liftIO $ runDB pool (selectOneByField @User "email" (Only email))
 
 deleteUser :: UserId -> DBT IO ()
 deleteUser userId = delete @User (Only userId)

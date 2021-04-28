@@ -9,9 +9,9 @@ import Web.Scotty.Trans (ActionT)
 
 import Web.Templates.Types (ModuleName (..), TemplateAssigns (getAssigns),
                             TemplateName (..))
-import Web.Types (WebM)
+import Web.Types (WebM, MatchmakerError)
 
-render :: ModuleName -> TemplateName -> TemplateAssigns -> ActionT LText WebM LText
+render :: ModuleName -> TemplateName -> TemplateAssigns -> ActionT MatchmakerError WebM LText
 render (ModuleName moduleName) (TemplateName templateName) assigns = do
   let templatePath = "./src/Web/Templates/" <> moduleName <> "/" <> templateName <> ".html"
   let hm = getAssigns assigns
@@ -23,7 +23,7 @@ render (ModuleName moduleName) (TemplateName templateName) assigns = do
     Right template ->
       pure . toLText . htmlSource $ runGinger context template
 
-resolver :: SourceName -> ActionT LText WebM (Maybe Source)
+resolver :: SourceName -> ActionT MatchmakerError WebM (Maybe Source)
 resolver templatePath = do
   e <- liftIO $ tryIOError $ readFile templatePath
   case e of

@@ -48,13 +48,13 @@ instance Entity Repository where
 insertRepository :: Repository -> DBT IO ()
 insertRepository repo = insert @Repository repo
 
-getRepository :: RepositoryId -> DBT IO Repository
+getRepository :: RepositoryId -> DBT IO (Maybe Repository)
 getRepository repoId = selectById @Repository (Only repoId)
 
 getRepositoriesByOrg :: OrganisationId -> DBT IO (Vector Repository)
 getRepositoriesByOrg orgId = selectManyByField @Repository "organisation_id" (Only orgId)
 
-getRepositoryByName :: Text -> DBT IO Repository
+getRepositoryByName :: Text -> DBT IO (Maybe Repository)
 getRepositoryByName name = selectOneByField "repository_name" (Only name)
 
 deleteRepository :: RepositoryId -> DBT IO ()

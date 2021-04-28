@@ -1,33 +1,26 @@
 module Web.Helpers where
 
-import Data.UUID (fromText)
-import Web.Scotty.Trans (ActionT)
+import Colourista.IO (cyanMessage)
+import qualified Data.HashMap.Strict as HM
+import Data.Time (getCurrentTime)
+import Web.Scotty.Trans (html)
+import GHC.Stack (popCallStack)
+import Web.Scotty.Internal.Types (ActionT, ScottyError (showError))
 
-import DB.User (UserId (UserId))
-import Web.Sessions (getAssign, insertAssign, modifySession, readSession)
-import Web.Types (WebEnvironment (sessions), WebM)
+import Web.Templates (render)
+import Web.Templates.Types (ModuleName (ModuleName),
+                            TemplateAssigns (TemplateAssigns),
+                            TemplateName (TemplateName))
+import Web.Types (MatchmakerError (..), WebM)
 
-isUserAuthenticated :: ActionT LText WebM Bool
-isUserAuthenticated = do
-  mUserAssigns <- readSession =<< asks sessions
-  case mUserAssigns of
-    Nothing -> pure False
-    Just ua -> do
-      let content = getAssign "authed?" ua
-      if content == Just "true"
-      then pure True
-      else pure False
+errorHandler :: HasCallStack => MatchmakerError
+             -> ActionT MatchmakerError WebM ()
+errorHandler err = do
+  let assigns = TemplateAssigns $ HM.fromList [("error", toStrict $ showError err), ("stacktrace", toText $ prettyCallStack callStack)]
+  html =<< render (ModuleName "Error") (TemplateName "500") assigns
 
-markUserAsAuthenticated :: UserId -> ActionT LText WebM ()
-markUserAsAuthenticated userId = do
-  sm <- asks sessions
-  modifySession sm (\mVal -> mVal >>= Just . insertAssign "authed?" "true")
-  modifySession sm (\mVal -> mVal >>= Just . insertAssign "user_id" (toText userId))
-
-getUserId :: ActionT LText WebM (Maybe UserId)
-getUserId = do
-  mUserAssigns <- readSession =<< asks sessions
-  case mUserAssigns of
-    Nothing -> pure Nothing
-    Just ua ->
-      pure $ UserId <$> (fromText =<< getAssign "user_id" ua)
+debug :: HasCallStack => (MonadIO m) => Text -> m ()
+debug msg = do
+  ts <- liftIO getCurrentTime
+  liftIO $ cyanMessage $ show ts <> " [Debug] " <> msg
+  liftIO $ cyanMessage $ toText $ prettyCallStack $ popCallStack  callStack

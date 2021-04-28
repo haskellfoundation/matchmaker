@@ -2,8 +2,8 @@
 
 <html lang="en" class="no-js">
 <head>
-  <meta name="viewport" content="width=device-width initial-scale="/>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width initial-scale="/>
   <title>Matchmaker</title>
 
   <script type="module">
@@ -27,10 +27,10 @@
 <body>
     <div class="flex flex-col h-screen justify-between bg-gray-100">
         <main class="h-5">
-            <!-- Replace with your content -->
-            {% block content%}
-            {% endblock %}
-            <!-- /End replace -->
+          <div class="flash-alert-warning">{{ flash_alert_info|raw }}</div>
+          <div class="flash-alert-error">{{ flash_alert_error|raw }}</div>
+          {% block content%}
+          {% endblock content %}
         </main>
 
         <footer class="mb-10 h-10">

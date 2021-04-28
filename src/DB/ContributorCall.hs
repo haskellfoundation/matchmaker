@@ -42,7 +42,7 @@ instance Entity ContributorCall where
 insertContributorCall :: ContributorCall -> DBT IO ()
 insertContributorCall cc = insert @ContributorCall cc
 
-getContributorCall :: ContributorCallId -> DBT IO ContributorCall
+getContributorCall :: ContributorCallId -> DBT IO (Maybe ContributorCall)
 getContributorCall ccId = selectById @ContributorCall (Only ccId)
 
 deleteContributorCall :: ContributorCallId -> DBT IO ()

@@ -7,3 +7,17 @@
     display: none;
   }
 }
+
+.flash-alert-error {
+  position: absolute;
+  right: 2rem;
+  min-width: 11%;
+  margin-top: 1rem;
+}
+
+.flash-alert-info {
+  position: absolute;
+  right: 2rem;
+  min-width: 11%;
+  margin-top: 1rem;
+}

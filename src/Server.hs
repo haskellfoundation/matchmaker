@@ -10,10 +10,10 @@ import Web.Router (router)
 import Web.Sessions (createSessionManager)
 import Web.Types (WebEnvironment (..), WebM, runWebM)
 
-startWebService :: IO ()
+startWebService :: (HasCallStack) => IO ()
 startWebService = do
   greenMessage "[+] Starting web server on http://localhost:8008"
-  MatchmakerEnv{pgPool} <- mkEnv
+  MatchmakerEnv{pgPool} <- liftIO mkEnv
   let templateCache = HM.empty
   sessions <- createSessionManager
   let env = WebEnvironment{..}

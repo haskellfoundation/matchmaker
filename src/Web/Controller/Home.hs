@@ -5,7 +5,6 @@ import Web.Scotty.Trans
 import Web.Types
 import qualified Web.View.Home as HomeView
 
-index :: ActionT LText WebM ()
-index = do
-  result <- HomeView.index
-  html result
+index :: ActionT MatchmakerError WebM ()
+index = HomeView.index
+        >>= html
