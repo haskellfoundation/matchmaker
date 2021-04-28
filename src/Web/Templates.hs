@@ -10,6 +10,7 @@ import Web.Scotty.Trans (ActionT)
 import Web.Templates.Types (ModuleName (..), TemplateAssigns (getAssigns),
                             TemplateName (..))
 import Web.Types (WebM, MatchmakerError)
+import Web.FlashAlerts (popFlash)
 
 render :: ModuleName -> TemplateName -> TemplateAssigns -> ActionT MatchmakerError WebM LText
 render (ModuleName moduleName) (TemplateName templateName) assigns = do
@@ -20,7 +21,9 @@ render (ModuleName moduleName) (TemplateName templateName) assigns = do
   template' <- parseGingerFile resolver (toString templatePath)
   case template' of
     Left err -> pure $ show err
-    Right template ->
+    Right template -> do
+      popFlash "flash_alert_info"
+      popFlash "flash_alert_error"
       pure . toLText . htmlSource $ runGinger context template
 
 resolver :: SourceName -> ActionT MatchmakerError WebM (Maybe Source)
