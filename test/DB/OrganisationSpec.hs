@@ -3,16 +3,20 @@
 
 module DB.OrganisationSpec where
 
-import Relude.Unsafe (read)
 import Data.Password.Argon2
+import Data.UUID.V4
+import Relude.Unsafe (read)
 import Test.Hspec (Spec)
 import Test.Hspec.DB (describeDB, itDB)
 import Test.Hspec.Expectations.Lifted (shouldReturn)
-import Data.UUID.V4
 
+import DB.Organisation (Organisation (..), OrganisationId (..),
+                        UserOrganisationId (..), attachUser, getAdmins,
+                        getAllUserOrganisations, getUserOrganisation,
+                        getUserOrganisationById, getUsers, insertOrganisation,
+                        makeAdmin)
 import DB.SpecHelpers (migrate)
 import DB.User
-import DB.Organisation (Organisation(..), OrganisationId(..), insertOrganisation, attachUser, getAllUserOrganisations, UserOrganisationId(..), getUserOrganisationById, getUserOrganisation, getUsers, makeAdmin, getAdmins)
 
 user1 :: User
 user1 =

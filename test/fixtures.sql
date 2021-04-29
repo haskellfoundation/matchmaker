@@ -1,3 +1,5 @@
+-- You can load this file into the database by running:
+-- $ psql "$PG_URI" < test/fixtures.sql
 INSERT INTO "organisations" ("organisation_id",
                              "organisation_name",
                              "created_at",

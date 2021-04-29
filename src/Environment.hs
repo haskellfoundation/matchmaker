@@ -11,10 +11,10 @@ import qualified Database.PostgreSQL.Simple as PG
 import Env (AsUnread (unread), Error, Parser, Reader, help, parse, str, var)
 import Prelude hiding (Reader)
 
--- *Env datatypes are parsed as-is from the outside
 data Config
   = Config { pgConfig   :: PG.ConnectInfo
            , poolConfig :: PoolConfig
+           , httpPort   :: Word16
            }
   deriving (Show)
 
@@ -32,6 +32,7 @@ parseConfig :: Parser Error Config
 parseConfig =
   Config <$> parseConnectInfo
          <*> parsePoolConfig
+         <*> parsePort
 
 parseConnectInfo :: Parser Error PG.ConnectInfo
 parseConnectInfo =
@@ -47,9 +48,13 @@ parsePoolConfig =
              <*> var timeout               "DB_TIMEOUT"          (help "Timeout for each connection")
              <*> var (int >=> nonNegative) "DB_POOL_CONNECTIONS" (help "Number of connections per sub-pool")
 
--- *Env datatypes are the ones that are passed in the application
-newtype MatchmakerEnv
-  = MatchmakerEnv { pgPool :: ConnectionPool }
+parsePort :: Parser Error Word16
+parsePort = var port "MATCHMAKER_PORT" (help "HTTP Port for Matchmaker")
+
+data MatchmakerEnv
+  = MatchmakerEnv { pgPool :: ConnectionPool
+                  , httpPort :: Word16
+                  }
   deriving stock (Show)
 
 mkEnv :: IO MatchmakerEnv

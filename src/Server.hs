@@ -5,24 +5,24 @@ import qualified Data.HashMap.Strict as HM
 import Network.Wai.Handler.Warp (defaultSettings, setPort)
 import Web.Scotty.Trans (Options (Options), scottyOptsT)
 
-import Environment (MatchmakerEnv (..), mkEnv)
+import Environment
 import Web.Router (router)
 import Web.Sessions (createSessionManager)
 import Web.Types (WebEnvironment (..), WebM, runWebM)
 
 startWebService :: HasCallStack => IO ()
 startWebService = do
-  greenMessage "[+] Starting web server on http://localhost:8008"
-  MatchmakerEnv{pgPool} <- liftIO mkEnv
+  MatchmakerEnv{pgPool, httpPort} <- liftIO mkEnv
+  greenMessage $ "[+] Starting web server on http://localhost:" <> show httpPort
   let templateCache = HM.empty
   sessions <- createSessionManager
   let env = WebEnvironment{..}
-  scottyOptsT serverOptions (runIO env) router
+  scottyOptsT (serverOptions httpPort) (runIO env) router
 
-serverOptions :: Options
-serverOptions = Options 0 settings
+serverOptions :: Word16 -> Options
+serverOptions httpPort = Options 0 settings
   where
-    settings = setPort 8008 defaultSettings
+    settings = setPort (fromIntegral httpPort) defaultSettings
 
 runIO :: WebEnvironment -> WebM a -> IO a
 runIO env m = runWebM env m

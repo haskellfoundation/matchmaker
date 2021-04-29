@@ -2,8 +2,8 @@ module Main where
 
 import Test.Hspec
 
-import qualified DB.UserSpec as UserSpec
 import qualified DB.OrganisationSpec as OrganisationSpec
+import qualified DB.UserSpec as UserSpec
 -- import qualified RepositorySpec as RepositorySpec
 
 main :: IO ()

@@ -5,26 +5,37 @@ import System.IO.Error (tryIOError)
 import Text.Ginger (GVal, Source, SourceName, ToGVal (..), makeContextHtml,
                     parseGingerFile, runGinger)
 import Text.Ginger.Html (htmlSource)
-import Web.Scotty.Trans (ActionT)
+import Web.Scotty.Trans (ActionT, html, showError)
 
-import Web.Templates.Types (ModuleName (..), TemplateAssigns (getAssigns),
+import qualified Data.HashMap.Strict as HM
+import Web.Helpers (debug)
+import Web.Sessions (UserAssigns (UserAssigns), popAssign, getSession)
+import Web.Templates.Types (ModuleName (..), TemplateAssigns (..),
                             TemplateName (..))
-import Web.Types (WebM, MatchmakerError)
-import Web.FlashAlerts (popFlash)
+import Web.Types (MatchmakerError, WebM)
 
 render :: ModuleName -> TemplateName -> TemplateAssigns -> ActionT MatchmakerError WebM LText
 render (ModuleName moduleName) (TemplateName templateName) assigns = do
   let templatePath = "./src/Web/Templates/" <> moduleName <> "/" <> templateName <> ".html"
-  let hm = getAssigns assigns
+  (TemplateAssigns hm) <- mkAssigns assigns
+  debug ("Assigns: " <> show hm)
   let contextLookup = flip scopeLookup hm
   let context = makeContextHtml contextLookup
   template' <- parseGingerFile resolver (toString templatePath)
   case template' of
     Left err -> pure $ show err
     Right template -> do
-      popFlash "flash_alert_info"
-      popFlash "flash_alert_error"
+      popAssign "flash_alert_info"
+      popAssign "flash_alert_error"
       pure . toLText . htmlSource $ runGinger context template
+
+mkAssigns :: TemplateAssigns -> ActionT MatchmakerError WebM TemplateAssigns
+mkAssigns (TemplateAssigns templateAssigns) = do
+  fetchedSession <- getSession
+  let userAssigns = case fetchedSession of
+                  Just (UserAssigns hm) -> hm
+                  Nothing               -> HashMap.empty
+  pure $ TemplateAssigns $ HM.union templateAssigns userAssigns
 
 resolver :: SourceName -> ActionT MatchmakerError WebM (Maybe Source)
 resolver templatePath = do
@@ -39,3 +50,9 @@ resolver templatePath = do
 scopeLookup :: (Hashable k, Eq k, ToGVal m b)
             => k -> HashMap.HashMap k b -> GVal m
 scopeLookup key context = toGVal $ HashMap.lookup key context
+
+errorHandler :: HasCallStack => MatchmakerError
+             -> ActionT MatchmakerError WebM ()
+errorHandler err = do
+  let assigns = TemplateAssigns $ HM.fromList [("error", toStrict $ showError err), ("stacktrace", toText $ prettyCallStack callStack)]
+  html =<< render (ModuleName "Error") (TemplateName "500") assigns

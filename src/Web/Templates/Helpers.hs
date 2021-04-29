@@ -1,5 +1,6 @@
 module Web.Templates.Helpers where
 
+import qualified Data.HashMap.Strict as HM
 import qualified Data.Text as T
 import Language.Haskell.TH
 import Language.Haskell.TH.Syntax
@@ -13,3 +14,6 @@ moduleName :: Q (TExp ModuleName)
 moduleName = do
     name <- loc_module <$> qLocation
     [|| ModuleName $ U.last $ T.splitOn "." $ toText @String name ||]
+
+emptyAssigns :: TemplateAssigns
+emptyAssigns = TemplateAssigns HM.empty

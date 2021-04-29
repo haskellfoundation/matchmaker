@@ -6,14 +6,13 @@ module Web.Controller.Session
 import Data.Password.Argon2 (Password, mkPassword)
 import Web.Scotty.Trans
 
+import Database.PostgreSQL.Entity.DBT
 import DB.User
+import Web.Auth
 import Web.FlashAlerts
-import Web.Helpers
+import Web.Templates.Partials.FlashAlerts
 import Web.Types
 import qualified Web.View.Session as SessionView
-import Web.Auth
-import Web.Templates.Partials.FlashAlerts
-import Database.PostgreSQL.Entity.DBT
 
 new :: ActionT MatchmakerError WebM ()
 new = SessionView.login
@@ -21,10 +20,9 @@ new = SessionView.login
 
 create :: HasCallStack => ActionT MatchmakerError WebM ()
 create = do
-  email <- param "login-email"
-  loginPassword <- mkPassword <$> param "login-password"
+  email <- param "email"
+  loginPassword <- mkPassword <$> param "password"
   pool <- asks pgPool
-  debug "Validating login"
   result <- liftIO $ runDB pool $ getUserByEmail email
   case result of
     Just user -> validateLogin loginPassword user
@@ -32,15 +30,13 @@ create = do
       putError $ errorTemplate "Login failure"
       redirect "/login"
 
-validateLogin :: HasCallStack => Password -> User -> ActionT MatchmakerError WebM ()
+validateLogin :: Password -> User -> ActionT MatchmakerError WebM ()
 validateLogin loginPassword user = do
   if validatePassword loginPassword (password user)
   then do
-    debug "User is authenticated"
     markUserAsAuthenticated (userId user)
     putInfo $ infoTemplate "Logged-in"
     redirect "/"
   else do
     putError $ errorTemplate "Login failure"
-    debug "Passwords do not match!"
     redirect "/login"

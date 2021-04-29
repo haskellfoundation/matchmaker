@@ -1,11 +1,13 @@
 /.stack-work/
 deployments/prod.sh
-.envrc
 Session.vim
+.envrc
+environment.local.sh
 .hie
 /static/*
 assets/node_modules
 dist-newstyle
 <
+&
 .hspec-failures
 src/Web/Templates/Layout/layout.html

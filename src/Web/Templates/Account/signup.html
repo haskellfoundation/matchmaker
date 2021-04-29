@@ -1,0 +1,67 @@
+{% extends '../Layout/layout.html' %}
+{% block flash_alert_info %}
+{% endblock flash_alert_info %}
+{% block flash_alert_error %}
+{% endblock flash_alert_error %}
+{% block content %}
+
+<section class="absolute w-full top-0">
+    <div class="container mx-auto px-4 h-full">
+        <div class="flex content-center items-center justify-center h-full">
+            <div class="w-full lg:w-4/12 px-4 pt-32">
+                <div class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-purple-200 border-0">
+                  <div class="flex-auto px-4 lg:px-10 py-10 pt-0">
+                    <div class="text-gray-600 text-center mb-3 font-bold"><small>Sign-up!</small></div>
+                    <form data-bitwarden-watching="1" action="/account/create" method="POST">
+                        <div class="relative w-full mb-3">
+                            <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="grid-password">Name</label>
+                            <input type="text" class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm
+                                                      shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                                   placeholder="Display name" style="transition: all 0.15s ease 0s;" name="displayname" required>
+                            <div>
+                              {{ form_error_displayname }}
+                            </div>
+                        </div>
+                        <div class="relative w-full mb-3">
+                            <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="grid-password">Username</label>
+                            <input type="text" class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm
+                                                      shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                                   placeholder="Username" style="transition: all 0.15s ease 0s;" name="username" required>
+                            <div>
+                              {{ form_error_username }}
+                            </div>
+                        </div>
+                        <div class="relative w-full mb-3">
+                            <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="grid-password">Email</label>
+                            <input type="email" class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm
+                                                       shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                                   placeholder="Email" style="transition: all 0.15s ease 0s;" name="email" required>
+                            <div>
+                              {{ form_error_email }}
+                            </div>
+                        </div>
+                        <div class="relative w-full mb-3">
+                            <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="grid-password">Password</label>
+                            <input type="password" class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm
+                                                          shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                                   data-com.bitwarden.browser.user-edited="yes"
+                                   placeholder="Password" style="transition: all 0.15s ease 0s;" name="password" required>
+                            <div>
+                              {{ form_error_password }}
+                            </div>
+                        </div>
+
+                        <button class="bg-gray-900 text-white active:bg-gray-700 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none
+                                       focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150" type="submit" style="transition: all 0.15s ease 0s;">
+                            Sign up
+                        </button>
+                        </div>
+                    </form>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock content %}
