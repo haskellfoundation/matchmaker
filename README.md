@@ -13,6 +13,10 @@ and provide a smoother experience for people wishing to invest themselves in the
 * GHC 8.10.4
 * Yarn 1.22 or higher
 
+*Note*
+There is a `shell.nix` file provided for convenience. However it is far from perfect. Notably, it does not install
+GHC 8.10.4, nor manages a local installation of PostgreSQL (yet). Don't load this shell file with `--pure`.
+
 ## Run the backend
 
 ```bash

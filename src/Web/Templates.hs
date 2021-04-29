@@ -9,7 +9,7 @@ import Web.Scotty.Trans (ActionT, html, showError)
 
 import qualified Data.HashMap.Strict as HM
 import Web.Helpers (debug)
-import Web.Sessions (UserAssigns (UserAssigns), popAssign, getSession)
+import Web.Sessions (UserAssigns (UserAssigns), getSession, popAssign)
 import Web.Templates.Types (ModuleName (..), TemplateAssigns (..),
                             TemplateName (..))
 import Web.Types (MatchmakerError, WebM)

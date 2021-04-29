@@ -6,8 +6,8 @@ module Web.Controller.Session
 import Data.Password.Argon2 (Password, mkPassword)
 import Web.Scotty.Trans
 
-import Database.PostgreSQL.Entity.DBT
 import DB.User
+import Database.PostgreSQL.Entity.DBT
 import Web.Auth
 import Web.FlashAlerts
 import Web.Templates.Partials.FlashAlerts

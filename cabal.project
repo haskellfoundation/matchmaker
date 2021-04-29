@@ -2,7 +2,7 @@ packages: ./
 
 with-compiler: ghc-8.10.4
 
-index-state: 2021-04-25T09:10:49Z
+index-state: 2021-05-05T14:41:29Z
 
 source-repository-package
     type: git
