@@ -13,6 +13,7 @@ import Web.Types
 import qualified Web.View.Session as SessionView
 import Web.Auth
 import Web.Templates.Partials.FlashAlerts
+import Database.PostgreSQL.Entity.DBT
 
 new :: ActionT MatchmakerError WebM ()
 new = SessionView.login
@@ -24,7 +25,7 @@ create = do
   loginPassword <- mkPassword <$> param "login-password"
   pool <- asks pgPool
   debug "Validating login"
-  result <- getUserByEmail pool email
+  result <- liftIO $ runDB pool $ getUserByEmail email
   case result of
     Just user -> validateLogin loginPassword user
     Nothing -> do

@@ -39,8 +39,8 @@ spec = describeDB migrate "users" $ do
   itDB "Insert user and fetch it" $ do
     insertUser user1
     getUserById (userId user1)
-      `shouldReturn` user1
+      `shouldReturn` Just user1
   itDB "Insert user and fetch it by email" $ do
     insertUser user2
     getUserByEmail (email user2)
-      `shouldReturn` user2
+      `shouldReturn` Just user2

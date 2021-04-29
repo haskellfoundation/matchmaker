@@ -70,6 +70,7 @@ library
     src
   exposed-modules:
     DB.ContributorCall
+    DB.Helpers
     DB.Organisation
     DB.Repository
     DB.User

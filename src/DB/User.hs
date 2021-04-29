@@ -12,7 +12,6 @@ import Data.UUID (UUID)
 import qualified Data.UUID as UUID
 import Database.PostgreSQL.Entity (Entity (..), delete, insert, selectById,
                                    selectOneByField)
-import Database.PostgreSQL.Entity.DBT
 import Database.PostgreSQL.Simple (Only (Only))
 import Database.PostgreSQL.Simple.FromField (FromField (..))
 import Database.PostgreSQL.Simple.FromRow (FromRow (..))
@@ -77,17 +76,17 @@ validatePassword :: Password -> PasswordHash Argon2 -> Bool
 validatePassword inputPassword hashedPassword =
   Argon2.checkPassword inputPassword hashedPassword == PasswordCheckSuccess
 
-insertUser :: User -> DBT IO ()
+insertUser :: HasCallStack => User -> DBT IO ()
 insertUser user = insert @User user
 
-getUserById :: UserId -> DBT IO (Maybe User)
+getUserById :: HasCallStack => UserId -> DBT IO (Maybe User)
 getUserById userId = selectById (Only userId)
 
-getUserByUsername :: Text -> DBT IO (Maybe User)
+getUserByUsername :: HasCallStack => Text -> DBT IO (Maybe User)
 getUserByUsername username = selectOneByField "username" (Only username)
 
-getUserByEmail :: (HasCallStack, MonadIO m) => ConnectionPool -> Text -> m (Maybe User)
-getUserByEmail pool email = liftIO $ runDB pool (selectOneByField @User "email" (Only email))
+getUserByEmail :: HasCallStack => Text -> DBT IO (Maybe User)
+getUserByEmail email = selectOneByField "email" (Only email)
 
-deleteUser :: UserId -> DBT IO ()
+deleteUser :: HasCallStack => UserId -> DBT IO ()
 deleteUser userId = delete @User (Only userId)

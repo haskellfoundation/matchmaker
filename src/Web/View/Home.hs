@@ -19,7 +19,7 @@ index = do
   result <- getUserIdFromSession
   assigns  <- case result of
                   Nothing ->
-                    pure $ TemplateAssigns $ HashMap.empty
+                    pure $ TemplateAssigns HashMap.empty
                   Just uId -> do
                     (Just user) <- liftIO $ runDB pool $ getUserById uId
                     pure $ TemplateAssigns $ HashMap.fromList [("displayName", displayName user)]
