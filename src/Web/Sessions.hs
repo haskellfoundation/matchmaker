@@ -1,15 +1,16 @@
 {-# LANGUAGE OverloadedStrings   #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 module Web.Sessions
-  ( createSessionManager
-  , modifySession
-  , readSession
-  , ScottySM
+  ( ScottySM
   , UserAssigns (..)
-  , mkUserAssigns
-  , insertAssign
-  , removeAssign
+  , createSessionManager
   , getAssign
+  , insertAssign
+  , mkUserAssigns
+  , modifySession
+  , putAssign
+  , readSession
+  , removeAssign
   ) where
 
 import Control.Arrow (first)
@@ -20,17 +21,21 @@ import qualified Data.ByteString.Base64 as B64
 import qualified Data.HashMap.Strict as HM
 import Data.List (lookup)
 import qualified Data.Text as T
-import Data.Time.Clock (NominalDiffTime, UTCTime, addUTCTime, getCurrentTime)
+import Data.Time.Clock (NominalDiffTime, addUTCTime, getCurrentTime)
 import Data.Time.Format (defaultTimeLocale, formatTime)
 import Network.Wai (Request (requestHeaders))
 import Prelude hiding (atomically, first)
 import Web.Scotty.Trans (ActionT, ScottyError, request, setHeader)
 
-newtype UserAssigns = UserAssigns { getUserAssigns :: HashMap Text Text }
-  deriving newtype (Show, Eq)
+import Web.Types
 
 mkUserAssigns :: UserAssigns
 mkUserAssigns = UserAssigns HM.empty
+
+putAssign :: Text -> Text -> ActionT MatchmakerError WebM ()
+putAssign key value = do
+  sm <- asks sessions
+  modifySession sm (\mVal -> mVal >>= Just . insertAssign key value)
 
 insertAssign :: Text        -- ^ Key
              -> Text        -- ^ Value
@@ -47,19 +52,6 @@ removeAssign :: Text -- ^ Key
              -> UserAssigns -- ^ User assigns
              -> UserAssigns -- ^ New user assigns
 removeAssign k (UserAssigns hm) = UserAssigns $ HM.delete k hm
-
-
-data Session a =
-  Session { sess_id         :: Text
-          , sess_validUntil :: UTCTime
-          , sess_content    :: Maybe a
-          } deriving (Show, Eq)
-
-type SessionJar a = TVar (HashMap Text (Session a))
-
-newtype ScottySM a =
-  ScottySM { _unSessionManager :: SessionJar a }
-  deriving stock (Eq)
 
 -- | Create a new session manager
 createSessionManager :: IO (ScottySM a)
