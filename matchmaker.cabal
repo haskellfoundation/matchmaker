@@ -130,6 +130,7 @@ library
     wai                         ^>= 3.2,
     wai-cors                    ^>= 0.2,
     wai-extra                   ^>= 3.1,
+    wai-middleware-auth         ^>= 0.2,
     wai-middleware-static       ^>= 0.9,
     warp                        ^>= 3.3,
   mixins: base hiding (Prelude)

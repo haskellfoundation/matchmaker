@@ -6,22 +6,24 @@ import Prelude hiding (get)
 import Data.Default.Class (Default (def))
 import Data.HashSet (HashSet)
 import qualified Data.HashSet as HashSet
+import Network.HTTP.Types (status200)
+import Network.Wai (Application, Middleware, Request (requestMethod), pathInfo,
+                    responseLBS)
+import Network.Wai.Middleware.Auth
 import Network.Wai.Middleware.Cors (simpleCors)
 import Network.Wai.Middleware.RequestLogger (Destination (Handle), DetailedSettings (mModifyParams, useColors),
                                              OutputFormat (DetailedWithSettings),
                                              RequestLoggerSettings (autoFlush, destination, outputFormat),
                                              mkRequestLogger)
 import Network.Wai.Middleware.Static (noDots, staticPolicy)
+import System.IO.Unsafe (unsafePerformIO)
 import Web.Scotty.Trans (ScottyT, defaultHandler, get, middleware, post)
 
-import Network.HTTP.Types (status200)
-import Network.Wai (Application, Middleware, Request (requestMethod), pathInfo,
-                    responseLBS)
-import System.IO.Unsafe (unsafePerformIO)
 import qualified Web.Controller.Account as Account
 import qualified Web.Controller.Home as Home
 import qualified Web.Controller.Session as Session
 import qualified Web.Controller.User as User
+import Web.Helpers
 import Web.Middleware
 import Web.Scotty (Param)
 import Web.Templates (errorHandler)

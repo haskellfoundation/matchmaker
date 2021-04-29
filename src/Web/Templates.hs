@@ -8,11 +8,13 @@ import Text.Ginger.Html (htmlSource)
 import Web.Scotty.Trans (ActionT, html, showError)
 
 import qualified Data.HashMap.Strict as HM
+import Web.FlashAlerts (popFlash)
 import Web.Helpers (debug)
-import Web.Sessions (UserAssigns (UserAssigns), popAssign, getSession)
+import Web.Sessions (UserAssigns (UserAssigns), UserAssigns (UserAssigns),
+                     getSession, popAssign, readSession)
 import Web.Templates.Types (ModuleName (..), TemplateAssigns (..),
                             TemplateName (..))
-import Web.Types (MatchmakerError, WebM)
+import Web.Types (MatchmakerError, WebM, sessions)
 
 render :: ModuleName -> TemplateName -> TemplateAssigns -> ActionT MatchmakerError WebM LText
 render (ModuleName moduleName) (TemplateName templateName) assigns = do
@@ -31,10 +33,10 @@ render (ModuleName moduleName) (TemplateName templateName) assigns = do
 
 mkAssigns :: TemplateAssigns -> ActionT MatchmakerError WebM TemplateAssigns
 mkAssigns (TemplateAssigns templateAssigns) = do
-  fetchedSession <- getSession
+  fetchedSession <- readSession =<< asks sessions
   let userAssigns = case fetchedSession of
                   Just (UserAssigns hm) -> hm
-                  Nothing               -> HashMap.empty
+                  Nothing -> HashMap.empty
   pure $ TemplateAssigns $ HM.union templateAssigns userAssigns
 
 resolver :: SourceName -> ActionT MatchmakerError WebM (Maybe Source)
