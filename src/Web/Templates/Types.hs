@@ -1,7 +1,5 @@
 module Web.Templates.Types where
 
-import Text.Ginger (VarName)
-
 -- | A wrapper around 'Text' for module names
 newtype ModuleName = ModuleName Text
 
@@ -9,4 +7,4 @@ newtype ModuleName = ModuleName Text
 newtype TemplateName = TemplateName Text
 
 -- | A wrapper around 'HashMap Text Text' for template assigns
-newtype TemplateAssigns = TemplateAssigns { getAssigns :: HashMap VarName Text }
+newtype TemplateAssigns = TemplateAssigns { getAssigns :: HashMap Text Text }

@@ -1,16 +1,20 @@
 {-# LANGUAGE StrictData #-}
 module Web.Types
-  ( WebM (..)
-  , WebEnvironment (..)
+  ( DBError(..)
   , MatchmakerError(..)
-  , DBError(..)
+  , ScottySM (..)
+  , Session (..)
+  , SessionJar
+  , UserAssigns(..)
+  , WebEnvironment (..)
   , WebError(..)
+  , WebM (..)
   , runWebM
   ) where
 
 import Database.PostgreSQL.Entity.DBT (ConnectionPool)
 import Web.Scotty.Trans (ScottyError (..))
-import Web.Sessions (ScottySM, UserAssigns)
+import Data.Time (UTCTime)
 
 newtype WebM a
   = WebM { getWeb :: ReaderT WebEnvironment IO a }
@@ -53,3 +57,19 @@ instance ScottyError MatchmakerError where
   stringError = TextError . toText
   showError :: MatchmakerError -> LText
   showError = show
+
+data Session a =
+  Session { sess_id         :: Text
+          , sess_validUntil :: UTCTime
+          , sess_content    :: Maybe a
+          } deriving (Show, Eq)
+
+type SessionJar a = TVar (HashMap Text (Session a))
+
+newtype ScottySM a =
+  ScottySM { _unSessionManager :: SessionJar a }
+  deriving stock (Eq)
+
+newtype UserAssigns = UserAssigns { getUserAssigns :: HashMap Text Text }
+  deriving newtype (Show, Eq)
+
