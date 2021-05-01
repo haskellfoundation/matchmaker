@@ -12,9 +12,9 @@ module Web.Types
   , runWebM
   ) where
 
+import Data.Time (UTCTime)
 import Database.PostgreSQL.Entity.DBT (ConnectionPool)
 import Web.Scotty.Trans (ScottyError (..))
-import Data.Time (UTCTime)
 
 newtype WebM a
   = WebM { getWeb :: ReaderT WebEnvironment IO a }

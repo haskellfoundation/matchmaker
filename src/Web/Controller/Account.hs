@@ -3,18 +3,18 @@ module Web.Controller.Account
   , create
   ) where
 
-import Web.Scotty.Trans
 import Data.Time
+import Web.Scotty.Trans
 
+import Data.Password.Argon2 (mkPassword)
+import Data.UUID.V4 (nextRandom)
+import Database.PostgreSQL.Entity.DBT
+import DB.User
 import Model.UserModel
 import Web.Helpers
 import Web.Sessions (putAssign)
 import Web.Types
 import qualified Web.View.Account as AccountView
-import DB.User
-import Data.UUID.V4 (nextRandom)
-import Data.Password.Argon2 (mkPassword)
-import Database.PostgreSQL.Entity.DBT
 
 new :: ActionT MatchmakerError WebM ()
 new = AccountView.new

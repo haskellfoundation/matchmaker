@@ -6,13 +6,13 @@ module Web.Controller.Session
 import Data.Password.Argon2 (Password, mkPassword)
 import Web.Scotty.Trans
 
+import Database.PostgreSQL.Entity.DBT
 import DB.User
+import Web.Auth
 import Web.FlashAlerts
+import Web.Templates.Partials.FlashAlerts
 import Web.Types
 import qualified Web.View.Session as SessionView
-import Web.Auth
-import Web.Templates.Partials.FlashAlerts
-import Database.PostgreSQL.Entity.DBT
 
 new :: ActionT MatchmakerError WebM ()
 new = SessionView.login

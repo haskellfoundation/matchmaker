@@ -13,12 +13,12 @@ import Database.PostgreSQL.Simple.FromField (FromField)
 import Database.PostgreSQL.Simple.ToField (ToField)
 import Database.PostgreSQL.Transact (DBT)
 
+import Data.Maybe (fromJust)
 import Data.Vector (Vector)
 import Database.PostgreSQL.Entity.DBT (QueryNature (Select), query, queryOne,
                                        query_)
 import Database.PostgreSQL.Simple.SqlQQ (sql)
 import DB.User (User, UserId)
-import Data.Maybe (fromJust)
 
 newtype OrganisationId
   = OrganisationId { getOrganisationId :: UUID }

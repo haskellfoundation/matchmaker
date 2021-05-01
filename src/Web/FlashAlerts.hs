@@ -2,9 +2,10 @@ module Web.FlashAlerts where
 
 import Web.Scotty.Trans (ActionT)
 
-import Web.Sessions (getAssign, insertAssign, modifySession, readSession, removeAssign)
-import Web.Types (WebEnvironment (sessions), WebM, MatchmakerError)
+import Web.Sessions (getAssign, insertAssign, modifySession, readSession,
+                     removeAssign)
 import Web.Templates.Partials.FlashAlerts
+import Web.Types (MatchmakerError, WebEnvironment (sessions), WebM)
 
 putInfo :: Text -> ActionT MatchmakerError WebM ()
 putInfo msg = putFlash "flash_alert_info" msg

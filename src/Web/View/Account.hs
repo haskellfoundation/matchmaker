@@ -2,10 +2,10 @@ module Web.View.Account where
 
 import Web.Scotty.Trans
 
-import Web.Types
+import Web.Templates
 import Web.Templates.Helpers
 import Web.Templates.Types
-import Web.Templates
+import Web.Types
 
 new :: ActionT MatchmakerError WebM LText
 new = do

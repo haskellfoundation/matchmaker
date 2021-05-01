@@ -10,7 +10,7 @@ import Web.Templates (render)
 import Web.Templates.Helpers (moduleName)
 import Web.Templates.Types (TemplateAssigns (TemplateAssigns),
                             TemplateName (TemplateName))
-import Web.Types (WebEnvironment (..), WebM, MatchmakerError)
+import Web.Types (MatchmakerError, WebEnvironment (..), WebM)
 
 index :: ActionT MatchmakerError WebM LText
 index = do

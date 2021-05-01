@@ -9,12 +9,12 @@ import Network.Wai.Middleware.RequestLogger (logStdoutDev)
 import Network.Wai.Middleware.Static
 import Web.Scotty.Trans (ScottyT, defaultHandler, get, middleware, post)
 
+import qualified Web.Controller.Account as Account
 import qualified Web.Controller.Home as Home
 import qualified Web.Controller.Session as Session
-import qualified Web.Controller.Account as Account
-import Web.Types
 import Web.Helpers
 import Web.Templates (errorHandler)
+import Web.Types
 
 router :: HasCallStack => ScottyT MatchmakerError WebM ()
 router = do

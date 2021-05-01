@@ -2,10 +2,10 @@ module Web.View.Session where
 
 import Web.Scotty.Trans
 
-import Web.Types
-import Web.Templates.Helpers (moduleName, emptyAssigns)
 import Web.Templates
+import Web.Templates.Helpers (emptyAssigns, moduleName)
 import Web.Templates.Types
+import Web.Types
 
 login :: ActionT MatchmakerError WebM LText
 login =

@@ -35,7 +35,7 @@ mkAssigns (TemplateAssigns templateAssigns) = do
   fetchedSession <- readSession =<< asks sessions
   let userAssigns = case fetchedSession of
                   Just (UserAssigns hm) -> hm
-                  Nothing -> HashMap.empty
+                  Nothing               -> HashMap.empty
   pure $ TemplateAssigns $ HM.union templateAssigns userAssigns
 
 resolver :: SourceName -> ActionT MatchmakerError WebM (Maybe Source)
