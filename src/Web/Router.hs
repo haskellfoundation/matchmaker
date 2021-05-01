@@ -20,6 +20,10 @@ import System.IO.Unsafe (unsafePerformIO)
 import Web.Scotty (Param)
 import Web.Scotty.Trans (ScottyT, defaultHandler, get, middleware, post)
 
+import Network.HTTP.Types (status200)
+import Network.Wai (Application, Middleware, Request (requestMethod), pathInfo,
+                    responseLBS)
+import System.IO.Unsafe (unsafePerformIO)
 import qualified Web.Controller.Account as Account
 import qualified Web.Controller.Home as Home
 import qualified Web.Controller.Session as Session
