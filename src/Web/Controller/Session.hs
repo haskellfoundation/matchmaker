@@ -20,8 +20,8 @@ new = SessionView.login
 
 create :: HasCallStack => ActionT MatchmakerError WebM ()
 create = do
-  email <- param "login-email"
-  loginPassword <- mkPassword <$> param "login-password"
+  email <- param "email"
+  loginPassword <- mkPassword <$> param "password"
   pool <- asks pgPool
   result <- liftIO $ runDB pool $ getUserByEmail email
   case result of
