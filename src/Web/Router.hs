@@ -17,6 +17,7 @@ import Network.Wai.Middleware.RequestLogger (Destination (Handle), DetailedSetti
                                              mkRequestLogger)
 import Network.Wai.Middleware.Static (noDots, staticPolicy)
 import System.IO.Unsafe (unsafePerformIO)
+import Web.Scotty (Param)
 import Web.Scotty.Trans (ScottyT, defaultHandler, get, middleware, post)
 
 import qualified Web.Controller.Account as Account
@@ -25,7 +26,6 @@ import qualified Web.Controller.Session as Session
 import qualified Web.Controller.User as User
 import Web.Helpers
 import Web.Middleware
-import Web.Scotty (Param)
 import Web.Templates (errorHandler)
 import Web.Types (MatchmakerError, WebM)
 

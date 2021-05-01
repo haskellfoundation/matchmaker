@@ -4,14 +4,14 @@ module Web.Controller.Account
   ) where
 
 import Data.Password.Argon2 (mkPassword)
-import Data.UUID.V4 (nextRandom)
-import Database.PostgreSQL.Entity.DBT (runDB)
-
 import Data.Time
+import Data.UUID.V4 (nextRandom)
+import Database.PostgreSQL.Entity.DBT
+import Web.Scotty.Trans
+
 import DB.User
 import Model.UserModel
 import Web.Helpers
-import Web.Scotty.Trans
 import Web.Sessions (putAssign)
 import Web.Types
 import qualified Web.View.Account as AccountView
