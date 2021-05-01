@@ -99,6 +99,7 @@ library
     base64-bytestring           ^>= 1.2,
     colourista                  ^>= 0.1,
     cryptonite                  ^>= 0.28,
+    data-default-class          ^>= 0.1,
     envparse                    ^>= 0.4,
     ginger                      ^>= 0.10,
     hashable                    ^>= 1.3,

@@ -23,10 +23,10 @@ new = AccountView.new
 create :: HasCallStack => ActionT MatchmakerError WebM ()
 create = do
   debug "Validating sign-up"
-  usernameParam <- param "signup-username"
-  emailParam <- param "signup-email"
-  passwordParam <- param "signup-password"
-  displayNameParam <- param "signup-displayname"
+  usernameParam <- param "username"
+  emailParam <- param "email"
+  passwordParam <- param "password"
+  displayNameParam <- param "displayname"
   pool <- asks pgPool
   let validationResult = validateNewUser NewUser{..}
   case validationResult of
