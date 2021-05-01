@@ -1,6 +1,5 @@
 /.stack-work/
 deployments/prod.sh
-.envrc
 Session.vim
 .hie
 /static/*
