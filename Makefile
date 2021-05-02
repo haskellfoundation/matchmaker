@@ -1,5 +1,5 @@
 start: ## Start the server
-	@cabal exec matchmaker
+	@cabal run matchmaker
 
 deps: ## Install the dependencies of the backend
 	@cabal install postgresql-simple-migration

@@ -59,11 +59,6 @@ getSession = asks sessions >>= readSession
 getAssign :: Text -> UserAssigns -> Maybe Text
 getAssign key (UserAssigns hm) = HM.lookup key hm
 
-putAssign :: Text -> Text -> ActionT MatchmakerError WebM ()
-putAssign key value = do
-  sm <- asks sessions
-  modifySession sm (\mVal -> mVal >>= Just . insertAssign key value)
-
 insertAssign :: Text        -- ^ Key
              -> Text        -- ^ Value
              -> UserAssigns -- ^ User assigns

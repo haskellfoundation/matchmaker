@@ -4,16 +4,18 @@ module Web.Controller.Account
   ) where
 
 import Data.Password.Argon2 (mkPassword)
-import Data.Time
+import Data.Time (getCurrentTime)
 import Data.UUID.V4 (nextRandom)
-import Database.PostgreSQL.Entity.DBT
-import Web.Scotty.Trans
+import Database.PostgreSQL.Entity.DBT (runDB)
+import Web.Scotty.Trans (ActionT, html, param, redirect)
 
-import DB.User
-import Model.UserModel
-import Web.Helpers
+import DB.User (User (User, createdAt, displayName, email, password, updatedAt, userId, username),
+                UserId (UserId), hashPassword, insertUser)
+import Model.UserModel (NewUser (NewUser, displayNameParam, emailParam, passwordParam, usernameParam),
+                        NewUserValidationError (..), validateNewUser)
+import Web.Helpers (debug)
 import Web.Sessions (putAssign)
-import Web.Types
+import Web.Types (MatchmakerError, WebEnvironment (pgPool), WebM)
 import qualified Web.View.Account as AccountView
 
 new :: ActionT MatchmakerError WebM ()

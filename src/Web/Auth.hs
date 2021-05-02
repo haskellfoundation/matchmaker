@@ -3,19 +3,14 @@ module Web.Auth
   , getUserIdFromSession
   , markUserAsAuthenticated
   , withUserId
-  , authenticationMiddleware
   ) where
 
 import Data.UUID (fromText)
 import Web.Scotty.Trans (ActionT)
 
 import DB.User (UserId (..))
-import Network.Wai (Middleware)
-import Network.Wai.Middleware.Auth
-import Web.Sessions (fetchAssign, getAssign, insertAssign, modifySession,
-                     putAssign, readSession)
-import Web.Types (MatchmakerError, MatchmakerError, WebEnvironment (sessions),
-                  WebM, WebM)
+import Web.Sessions (putAssign, fetchAssign)
+import Web.Types (MatchmakerError, WebM)
 
 isUserAuthenticated :: ActionT MatchmakerError WebM Bool
 isUserAuthenticated = do
@@ -40,8 +35,3 @@ withUserId :: (UserId -> ActionT MatchmakerError WebM ())
 withUserId action = do
   result <- getUserIdFromSession
   whenJust result action
-
-authenticationMiddleware :: IO Middleware
-authenticationMiddleware = mkAuthMiddleware settings
-  where
-    settings = defaultAuthSettings
