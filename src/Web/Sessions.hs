@@ -1,16 +1,16 @@
 {-# LANGUAGE OverloadedStrings   #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 module Web.Sessions
-  ( ScottySM
-  , UserAssigns (..)
-  , createSessionManager
-  , getAssign
-  , insertAssign
-  , mkUserAssigns
-  , modifySession
+  ( -- * Data-types
+    ScottySM
+  , UserAssigns(..)
+    -- * High-level API
   , putAssign
-  , readSession
-  , removeAssign
+  , popAssign
+  , fetchAssign
+  , getSession
+    -- * Helper
+  , createSessionManager
   ) where
 
 import Control.Arrow (first)
@@ -29,24 +29,41 @@ import Web.Scotty.Trans (ActionT, ScottyError, request, setHeader)
 
 import Web.Types
 
-mkUserAssigns :: UserAssigns
-mkUserAssigns = UserAssigns HM.empty
-
 putAssign :: Text -> Text -> ActionT MatchmakerError WebM ()
 putAssign key value = do
   sm <- asks sessions
   modifySession sm (\mVal -> mVal >>= Just . insertAssign key value)
+
+popAssign :: Text -> ActionT MatchmakerError WebM (Maybe Text)
+popAssign key = do
+  sm <- asks sessions
+  mUserAssigns <- readSession sm
+  case mUserAssigns of
+    Nothing -> pure Nothing
+    Just ua -> do
+      let content = getAssign key ua
+      modifySession sm (\mVal -> mVal >>= Just . removeAssign key)
+      pure content
+
+fetchAssign :: Text -> ActionT MatchmakerError WebM (Maybe Text)
+fetchAssign key = do
+  sm <- asks sessions
+  mUserAssigns <- readSession sm
+  case mUserAssigns of
+    Nothing -> pure Nothing
+    Just ua -> pure $ getAssign key ua
+
+getSession :: ActionT MatchmakerError WebM (Maybe UserAssigns)
+getSession = asks sessions >>= readSession
+
+getAssign :: Text -> UserAssigns -> Maybe Text
+getAssign key (UserAssigns hm) = HM.lookup key hm
 
 insertAssign :: Text        -- ^ Key
              -> Text        -- ^ Value
              -> UserAssigns -- ^ User assigns
              -> UserAssigns
 insertAssign key value (UserAssigns hm) = UserAssigns $ HM.insert key value hm
-
-getAssign :: Text        -- ^ Key
-          -> UserAssigns -- ^ User assigns
-          -> Maybe Text  -- ^ Value
-getAssign key (UserAssigns hm) = HM.lookup key hm
 
 removeAssign :: Text -- ^ Key
              -> UserAssigns -- ^ User assigns
@@ -109,8 +126,8 @@ insertSession :: Session a -> SessionJar a -> IO ()
 insertSession sess sessions =
   atomically $ modifyTVar' sessions $ \m -> HM.insert (sess_id sess) sess m
 
-getSession :: T.Text -> SessionJar a -> IO (Maybe (Session a))
-getSession sessId sessions = do
+getSessionFromJar :: T.Text -> SessionJar a -> IO (Maybe (Session a))
+getSessionFromJar sessId sessions = do
   s <- readTVarIO sessions
   pure $ HM.lookup sessId s
 
@@ -153,7 +170,7 @@ getUserSession req sessions =
     Just sid -> lookupSession sid
     Nothing  -> pure Nothing
   where
-    lookupSession sid = getSession sid sessions
+    lookupSession sid = getSessionFromJar sid sessions
     lookupResult = lookup "cookie" (requestHeaders req)
                    >>= lookup "sid" . parseCookies . decodeUtf8
 
