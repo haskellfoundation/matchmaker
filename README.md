@@ -7,31 +7,25 @@
 *Matchmaker* is a project of the Haskell Foundation to help open-source maintainers and contributors find each-other,
 and provide a smoother experience for people wishing to invest themselves in the opens-source Haskell ecosystem.
 
-## Build
+## Prerequisites
 
-### Backend
+* PostgreSQL 12 or higher
+* GHC 8.10.4
+* Yarn 1.22 or higher
+
+## Run the backend
 
 ```bash
+$ make deps
 $ make build
+$ make db-setup
+$ make start
 ```
 ### Frontend
 
 ```bash
-$ make assets-build
-```
-
-## Run
-
-### Backend
-
-```bash
-$ cabal run matchmaker
-```
-
-### Frontend
-
-```bash
-$ make assets-watch
+$ make assets-deps
+$ make assets-build # or assets-watch if you're working on CSS/JS
 ```
 
 [simple-haskell]: https://img.shields.io/badge/Simple-Haskell-purple?style=flat-square
