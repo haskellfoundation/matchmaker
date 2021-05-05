@@ -2,8 +2,8 @@ module Web.FlashAlerts where
 
 import Web.Scotty.Trans (ActionT)
 
-import Web.Sessions (putAssign, popAssign)
-import Web.Templates.Partials.FlashAlerts
+import Web.Sessions (popAssign, putAssign)
+import Web.Templates.Partials.FlashAlerts (errorTemplate, infoTemplate)
 import Web.Types (MatchmakerError, WebM)
 
 getFlashes :: ActionT MatchmakerError WebM Text

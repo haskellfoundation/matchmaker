@@ -6,13 +6,18 @@ import Prelude hiding (get)
 import Data.Default.Class (Default (def))
 import Data.HashSet (HashSet)
 import qualified Data.HashSet as HashSet
-import Network.Wai.Middleware.Auth ()
+import Network.HTTP.Types (status200)
+import Network.Wai (Application, Middleware, Request (requestMethod), pathInfo,
+                    responseLBS)
+import Network.Wai.Middleware.Auth
 import Network.Wai.Middleware.Cors (simpleCors)
 import Network.Wai.Middleware.RequestLogger (Destination (Handle), DetailedSettings (mModifyParams, useColors),
                                              OutputFormat (DetailedWithSettings),
                                              RequestLoggerSettings (autoFlush, destination, outputFormat),
                                              mkRequestLogger)
 import Network.Wai.Middleware.Static (noDots, staticPolicy)
+import System.IO.Unsafe (unsafePerformIO)
+import Web.Scotty (Param)
 import Web.Scotty.Trans (ScottyT, defaultHandler, get, middleware, post)
 
 import Network.HTTP.Types (status200)
@@ -22,7 +27,9 @@ import System.IO.Unsafe (unsafePerformIO)
 import qualified Web.Controller.Account as Account
 import qualified Web.Controller.Home as Home
 import qualified Web.Controller.Session as Session
-import Web.Scotty (Param)
+import qualified Web.Controller.User as User
+import Web.Helpers
+import Web.Middleware
 import Web.Templates (errorHandler)
 import Web.Types (MatchmakerError, WebM)
 
@@ -40,6 +47,8 @@ router = do
 
   get "/signup" Account.new
   post "/account/create" Account.create
+
+  get "/user"       User.show
 
 logger :: Middleware
 logger = unsafePerformIO $ mkRequestLogger settings
@@ -60,12 +69,3 @@ logger = unsafePerformIO $ mkRequestLogger settings
     paramsToHide :: HashSet ByteString
     paramsToHide = HashSet.fromList ["password", "token", "secret"]
 {-# NOINLINE logger #-}
-
-heartbeat :: Middleware
-heartbeat app req sendResponse = app req $ \res ->
-  if method `elem` ["GET", "HEAD"] && path == ["heartbeat"]
-  then sendResponse $ responseLBS status200 [("Content-Type", "text/plain")] "OK."
-  else sendResponse res
-    where
-      method = requestMethod req
-      path = pathInfo req

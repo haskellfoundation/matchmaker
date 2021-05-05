@@ -81,8 +81,10 @@ library
     Web.Controller.Account
     Web.Controller.Home
     Web.Controller.Session
+    Web.Controller.User
     Web.FlashAlerts
     Web.Helpers
+    Web.Middleware
     Web.Router
     Web.Sessions
     Web.Templates
@@ -93,6 +95,7 @@ library
     Web.View.Account
     Web.View.Home
     Web.View.Session
+    Web.View.User
   build-depends:
     aeson                       ^>= 1.5,
     base                        ^>= 4.14.1,
