@@ -52,7 +52,7 @@ parsePort :: Parser Error Word16
 parsePort = var port "MATCHMAKER_PORT" (help "HTTP Port for Matchmaker")
 
 data MatchmakerEnv
-  = MatchmakerEnv { pgPool :: ConnectionPool
+  = MatchmakerEnv { pgPool   :: ConnectionPool
                   , httpPort :: Word16
                   }
   deriving stock (Show)

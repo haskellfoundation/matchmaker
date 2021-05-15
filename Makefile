@@ -39,13 +39,15 @@ test: ## Run the test suite
 	@cabal test
 
 lint: ## Run the code linter (HLint)
-	@hlint -g
+	@find app test src -name "*.hs" | parallel -j $(PROCS) -- hlint --refactor-options="-i" --refactor {}
 
 style: ## Run the code styler (stylish-haskell)
 	@stylish-haskell -i -r src app test
 
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.* ?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+
+PROCS := $(shell nproc)
 
 .PHONY: all $(MAKECMDGOALS)
 

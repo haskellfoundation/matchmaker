@@ -5,9 +5,9 @@ import qualified Data.Text as T
 
 import Validation
 data NewUser =
-  NewUser { usernameParam :: {-# UNPACK#-} Text
-          , emailParam ::  {-# UNPACK#-} Text
-          , passwordParam ::  {-# UNPACK#-} Text
+  NewUser { usernameParam    :: {-# UNPACK#-} Text
+          , emailParam       :: {-# UNPACK#-} Text
+          , passwordParam    :: {-# UNPACK#-} Text
           , displayNameParam :: {-# UNPACK#-} Text
           } deriving stock (Show, Eq)
 

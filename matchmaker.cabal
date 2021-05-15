@@ -98,7 +98,7 @@ library
     Web.View.User
   build-depends:
     aeson                       ^>= 1.5,
-    base                        ^>= 4.14.1,
+    base                        ^>= 4.14,
     base64-bytestring           ^>= 1.2,
     colourista                  ^>= 0.1,
     cryptonite                  ^>= 0.28,

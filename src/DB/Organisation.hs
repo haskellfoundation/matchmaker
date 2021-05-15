@@ -5,20 +5,19 @@ module DB.Organisation where
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Time (UTCTime)
 import Data.UUID (UUID)
-import Database.PostgreSQL.Entity (Entity (..), delete, insert, selectById,
-                                   selectOneByField, update, _select,
-                                   _selectWhere)
+import Database.PostgreSQL.Entity (Entity (..), _select, _selectWhere, delete,
+                                   insert, selectById, selectOneByField, update)
 import Database.PostgreSQL.Simple (FromRow, Only (Only), ToRow)
 import Database.PostgreSQL.Simple.FromField (FromField)
 import Database.PostgreSQL.Simple.ToField (ToField)
 import Database.PostgreSQL.Transact (DBT)
 
+import DB.User (User, UserId)
 import Data.Maybe (fromJust)
 import Data.Vector (Vector)
 import Database.PostgreSQL.Entity.DBT (QueryNature (Select), query, queryOne,
                                        query_)
 import Database.PostgreSQL.Simple.SqlQQ (sql)
-import DB.User (User, UserId)
 
 newtype OrganisationId
   = OrganisationId { getOrganisationId :: UUID }

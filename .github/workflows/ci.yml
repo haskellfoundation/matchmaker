@@ -4,7 +4,7 @@ name: CI
 on:
   pull_request:
   push:
-    branches: ["main"]
+    branches: ['main']
 
 jobs:
   cabal:
@@ -13,9 +13,8 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        cabal: ["latest"]
-        ghc:
-          - "8.10.4"
+        cabal: ['3.4.0.0']
+        ghc: ['8.10.4']
 
     steps:
     - uses: actions/checkout@v2
@@ -28,18 +27,27 @@ jobs:
         ghc-version: ${{ matrix.ghc }}
         cabal-version: ${{ matrix.cabal }}
 
+    - name: Configure environment
+      run: |
+        echo '/usr/lib/postgresql/12/bin/' >> $GITHUB_PATH
+        echo "/nix/var/nix/profiles/per-user/$USER/profile/bin" >> "$GITHUB_PATH"
+        echo "/nix/var/nix/profiles/default/bin" >> "$GITHUB_PATH"
+        echo 'NIX_PATH="nixpkgs=channel:nixos-unstable"' >> "$GITHUB_ENV"
+        echo '$HOME/.ghcup/bin' >> $GITHUB_PATH
+        echo 'HOME/.cabal/bin' >> $GITHUB_PATH
+        echo 'HOME/.local/bin' >> $GITHUB_PATH
+
+    - name: Install Nix
+      run: |
+        ./.github/workflows/install-nix.sh
+
     - name: Configure
       run: |
-        sudo apt update && sudo apt install -y postgresql-12 libpq-dev
-        echo "/usr/lib/postgresql/12/bin/" >> $GITHUB_PATH
         cabal configure --enable-tests --test-show-details=direct
-        echo "$HOME/.ghcup/bin" >> $GITHUB_PATH
-        echo "HOME/.cabal/bin" >> $GITHUB_PATH
-        echo "HOME/.local/bin" >> $GITHUB_PATH
 
     - name: Freeze
       run: |
-        cabal freeze
+        nix-shell --run 'cabal freeze'
 
     - uses: actions/cache@v2
       name: Cache ~/.cabal/store
@@ -47,14 +55,20 @@ jobs:
         path: ${{ steps.setup-haskell-cabal.outputs.cabal-store }}
         key: ${{ runner.os }}-${{ matrix.ghc }}-${{ hashFiles('cabal.project.freeze') }}
 
+    - name: Running hlint
+      run: nix-shell --run './.github/workflows/hlint-runner.sh'
+
+    - name: Running stylish-haskell
+      run: nix-shell --run './.github/workflows/stylish-haskell-runner.sh'
+
     - name: Install dependencies
       run: |
-        cabal build all --only-dependencies
+        nix-shell --run 'make deps'
 
     - name: Build
       run: |
-        cabal build all
+        nix-shell --run 'make build'
 
     - name: Test
       run: |
-        cabal test all
+        nix-shell --run 'make test'

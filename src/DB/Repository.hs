@@ -11,8 +11,8 @@ import Database.PostgreSQL.Simple.FromField (FromField)
 import Database.PostgreSQL.Simple.ToField (ToField)
 import Database.PostgreSQL.Transact (DBT)
 
-import Data.Vector (Vector)
 import DB.Organisation (OrganisationId (..))
+import Data.Vector (Vector)
 
 newtype RepositoryId
   = RepositoryId { getRepositoryId :: UUID }
