@@ -1,5 +1,5 @@
 {-# LANGUAGE QuasiQuotes #-}
-module Web.Templates.Partials.FlashAlerts where
+module Templates.Partials.FlashAlerts where
 
 import Data.String.Interpolate
 

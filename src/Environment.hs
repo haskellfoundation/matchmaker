@@ -1,21 +1,24 @@
 {-# LANGUAGE StrictData #-}
 module Environment
   ( MatchmakerEnv (..)
-  , getConfig
-  , mkEnv
+  , PoolConfig(..)
+  , getMatchmakerEnv
   ) where
 
+
+import Control.Monad.Logger (LogLevel (..))
 import Data.Time (NominalDiffTime)
-import Database.PostgreSQL.Entity.DBT (ConnectionPool, mkPool)
 import qualified Database.PostgreSQL.Simple as PG
-import Env (AsUnread (unread), Error, Parser, Reader, help, parse, str, var)
+import Env (AsUnread (unread), Error (..), Parser, Reader, help, parse, str,
+            var)
 import Prelude hiding (Reader)
 
-data Config
-  = Config { pgConfig   :: PG.ConnectInfo
-           , poolConfig :: PoolConfig
-           , httpPort   :: Word16
-           }
+data MatchmakerEnv
+  = MatchmakerEnv { matchmakerPgConfig   :: PG.ConnectInfo
+                  , matchmakerPoolConfig :: PoolConfig
+                  , matchmakerHttpPort   :: Word16
+                  , matchmakerLogLevel   :: LogLevel
+                  }
   deriving (Show)
 
 data PoolConfig
@@ -25,14 +28,6 @@ data PoolConfig
                }
   deriving (Show)
 
-getConfig :: IO Config
-getConfig = Env.parse id parseConfig
-
-parseConfig :: Parser Error Config
-parseConfig =
-  Config <$> parseConnectInfo
-         <*> parsePoolConfig
-         <*> parsePort
 
 parseConnectInfo :: Parser Error PG.ConnectInfo
 parseConnectInfo =
@@ -51,18 +46,19 @@ parsePoolConfig =
 parsePort :: Parser Error Word16
 parsePort = var port "MATCHMAKER_PORT" (help "HTTP Port for Matchmaker")
 
-data MatchmakerEnv
-  = MatchmakerEnv { pgPool   :: ConnectionPool
-                  , httpPort :: Word16
-                  }
-  deriving stock (Show)
+parseLogLevel :: Parser Error LogLevel
+parseLogLevel = var readLogLevel "MATCHMAKER_LOG_LEVEL" (help "Log level for Matchmaker")
 
-mkEnv :: IO MatchmakerEnv
-mkEnv = do
-  Config{..} <- getConfig
-  let PoolConfig{..} = poolConfig
-  pgPool <- mkPool pgConfig subPools connectionTimeout connections
-  pure $ MatchmakerEnv{..}
+parseConfig :: Parser Error MatchmakerEnv
+parseConfig =
+  MatchmakerEnv
+    <$> parseConnectInfo
+    <*> parsePoolConfig
+    <*> parsePort
+    <*> parseLogLevel
+
+getMatchmakerEnv :: IO MatchmakerEnv
+getMatchmakerEnv = Env.parse id parseConfig
 
 -- Env parser helpers
 
@@ -89,3 +85,14 @@ nonNegative nni =
 
 timeout :: Reader Error NominalDiffTime
 timeout t = second fromIntegral (int >=> nonNegative $ t)
+
+readLogLevel :: Reader Error LogLevel
+readLogLevel ll = do
+  ll' <- str ll
+  case ll' of
+    "debug"  -> Right LevelDebug
+    "info"   -> Right LevelInfo
+    "warn"   -> Right LevelWarn
+    "error"  -> Right LevelError
+    "silent" -> Right $ LevelOther "silent"
+    loglevel -> Left . unread $ loglevel <> " is not a valid option for MATCHMAKER_LOG_LEVEL"

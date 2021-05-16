@@ -11,3 +11,6 @@ dist-newstyle
 &
 .hspec-failures
 src/Web/Templates/Layout/layout.html
+ghcid.text
+/**/ghcid.text
+client_session_key.aes

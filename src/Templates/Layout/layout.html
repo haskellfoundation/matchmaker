@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-
 <html>
   <head>
     <meta charset="utf-8"/>
     <title>Control Plane</title>
     <meta name="viewport" content="width=device-width initial-scale="/>
     <base href="/" />
+    <script type="text/javascript" src="/static/main-bundle.1cfb4bf7ac6ca4ccb6da.js"></script>
   </head>
 
   <body>
     <div>
       <nav class="bg-gray-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
           <div class="flex items-center justify-between h-16">
             <div class="flex items-center">
               <div class="hidden md:block">
@@ -28,7 +28,7 @@
                   <span class="sr-only">View notifications</span>
                   <!-- Heroicon name: outline/bell -->
                   <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                   </svg>
                 </button>
@@ -45,7 +45,6 @@
 
                   <!--
                     Dropdown menu, show/hide based on menu state.
-
                     Entering: "transition ease-out duration-100"
                       From: "transform opacity-0 scale-95"
                       To: "transform opacity-100 scale-100"
@@ -71,7 +70,6 @@
                 <span class="sr-only">Open main menu</span>
                 <!--
                   Heroicon name: outline/menu
-
                   Menu open: "hidden", Menu closed: "block"
                 -->
                 <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
@@ -79,7 +77,6 @@
                 </svg>
                 <!--
                   Heroicon name: outline/x
-
                   Menu open: "block", Menu closed: "hidden"
                 -->
                 <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
@@ -126,7 +123,7 @@
         </div>
       </nav>
       <div class="flash-alert">
-        {{{flash}}}
+        {% block flash %}{% endblock %}
       </div>
 
       <header class="bg-white shadow">
@@ -137,15 +134,14 @@
         </div>
       </header>
       <main>
-        <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <div class="max-w-screen-2xl mx-auto py-6 sm:px-6 lg:px-8">
           <!-- Replace with your content -->
           <div class="px-4 py-6 sm:px-0">
-            {{{template}}}
+            {% block content %}{% endblock %}
           </div>
           <!-- /End replace -->
         </div>
       </main>
     </div>
-    <script type="text/javascript" src="/static/main-bundle.dd40d5816c57cd539d56.js"></script>
   </body>
 </html>

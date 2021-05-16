@@ -1,4 +1,4 @@
-module Web.Templates.Types where
+module Templates.Types where
 
 -- | A wrapper around 'Text' for module names
 newtype ModuleName = ModuleName Text
