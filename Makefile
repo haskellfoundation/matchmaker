@@ -25,8 +25,8 @@ assets-clean: ## Remove JS artifacts
 
 db-setup: ## Setup the dev database
 	@createdb matchmaker_dev
-	@cabal exec -- migrate init "$(PG_CONNSTRING)" migrations
-	@cabal exec -- migrate migrate "$(PG_CONNSTRING)" migrations
+	@cabal exec -- migrate init "$(echo $PG_CONNSTRING)" migrations
+	@cabal exec -- migrate migrate "$(echo $PG_CONNSTRING)" migrations
 
 db-reset: ## Reset the dev database
 	@dropdb matchmaker_dev
