@@ -1,4 +1,5 @@
 export MATCHMAKER_PORT="8008"
+export MATCHMAKER_LOG_LEVEL="debug"
 
 export DB_HOST="localhost"
 export DB_PORT="5432"

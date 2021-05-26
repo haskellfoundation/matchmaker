@@ -1,12 +1,10 @@
 module Web.FlashAlerts where
 
-import Web.Scotty.Trans (ActionT)
-
+import ImportYesod
+import Templates.Partials.FlashAlerts (errorTemplate, infoTemplate)
 import Web.Sessions (popAssign, putAssign)
-import Web.Templates.Partials.FlashAlerts (errorTemplate, infoTemplate)
-import Web.Types (MatchmakerError, WebM)
 
-getFlashes :: ActionT MatchmakerError WebM Text
+getFlashes :: Handler Text
 getFlashes = do
   maybeError <- getError
   maybeInfo <- getInfo
@@ -15,14 +13,14 @@ getFlashes = do
   let info    = maybe "" infoTemplate maybeInfo
   pure $ err <> info
 
-putInfo :: Text -> ActionT MatchmakerError WebM ()
+putInfo :: Text -> Handler ()
 putInfo msg = putAssign "flash_alert_info" msg
 
-putError :: Text -> ActionT MatchmakerError WebM ()
+putError :: Text -> Handler ()
 putError msg = putAssign "flash_alert_error" msg
 
-getInfo :: ActionT MatchmakerError WebM (Maybe Text)
+getInfo :: Handler (Maybe Text)
 getInfo = popAssign "flash_alert_info"
 
-getError :: ActionT MatchmakerError WebM (Maybe Text)
+getError :: Handler (Maybe Text)
 getError = popAssign "flash_alert_error"
