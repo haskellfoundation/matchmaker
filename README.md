@@ -14,8 +14,14 @@ and provide a smoother experience for people wishing to invest themselves in the
 * Yarn 1.22 or higher
 
 *Note*
-There is a `shell.nix` file provided for convenience. However it is far from perfect. Notably, it does not install
-GHC 8.10.4, nor manages a local installation of PostgreSQL (yet). Don't load this shell file with `--pure`.
+There is a `shell.nix` file provided for convenience. However it is far from perfect.
+It will not manage a local installation of PostgreSQL for you.
+You should be able to work in a pure shell. If not, file a bug!
+The nix shell should source all environment variables when you enter it. Additionally it provides 3 convenience scripts:
+
+1.  `dev` - This will run ghcid with a couple flags enabled
+2.  `run` - This will run the matchmaker application
+3.  `format` - This will run `stylish-haskell` on all .hs files in the current directory and below
 
 ## Run the backend
 
