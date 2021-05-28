@@ -16,6 +16,7 @@ in with pkgs;
       hlint
       haskellPackages.apply-refact
       stylish-haskell
+      git
 
       # Frontend Deps
       yarn

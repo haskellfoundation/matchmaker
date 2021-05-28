@@ -5,8 +5,9 @@ module DB.Organisation where
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Time (UTCTime)
 import Data.UUID (UUID)
-import Database.PostgreSQL.Entity (Entity (..), _select, _selectWhere, delete,
-                                   insert, selectById, selectOneByField, update)
+import Database.PostgreSQL.Entity (_select, _selectWhere, delete, insert,
+                                   selectById, selectOneByField, update)
+import Database.PostgreSQL.Entity.Types
 import Database.PostgreSQL.Simple (FromRow, Only (Only), ToRow)
 import Database.PostgreSQL.Simple.FromField (FromField)
 import Database.PostgreSQL.Simple.ToField (ToField)
@@ -32,15 +33,8 @@ data Organisation
                  }
     deriving stock (Eq, Generic, Show)
     deriving anyclass (FromRow, ToRow)
-
-instance Entity Organisation where
-  tableName = "organisations"
-  primaryKey = "organisation_id"
-  fields = [ "organisation_id"
-           , "organisation_name"
-           , "created_at"
-           , "updated_at"
-           ]
+    deriving (Entity)
+      via (GenericEntity '[TableName "organisations"] Organisation)
 
 newtype UserOrganisationId
   = UserOrganisationId { getUserOrganisationId :: UUID }

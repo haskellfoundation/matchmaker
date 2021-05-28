@@ -1,16 +1,16 @@
-{-# LANGUAGE OverloadedLists #-}
 module DB.ContributorCall where
 
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Time (UTCTime)
 import Data.UUID (UUID)
-import Database.PostgreSQL.Entity (Entity (..), delete, insert, selectById)
+import Database.PostgreSQL.Entity
 import Database.PostgreSQL.Simple (FromRow, Only (Only), ToRow)
 import Database.PostgreSQL.Simple.FromField (FromField)
 import Database.PostgreSQL.Simple.ToField (ToField)
 import Database.PostgreSQL.Transact (DBT)
 
 import DB.Repository (RepositoryId)
+import Database.PostgreSQL.Entity.Types
 
 newtype ContributorCallId
   = ContributorCallId { getContributorCallId :: UUID }
@@ -27,17 +27,8 @@ data ContributorCall
                     }
     deriving stock (Eq, Generic, Show)
     deriving anyclass (FromRow, ToRow)
-
-instance Entity ContributorCall where
-  tableName = "contributor_calls"
-  primaryKey = "contributor_call_id"
-  fields = [ "contributor_call_id"
-           , "repository_id"
-           , "title"
-           , "description"
-           , "created_at"
-           , "updated_at"
-           ]
+    deriving (Entity)
+      via (GenericEntity '[TableName "contributor_calls"] ContributorCall)
 
 insertContributorCall :: ContributorCall -> DBT IO ()
 insertContributorCall cc = insert @ContributorCall cc

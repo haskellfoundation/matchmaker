@@ -1,5 +1,4 @@
 {-# LANGUAGE DerivingVia          #-}
-{-# LANGUAGE OverloadedLists      #-}
 {-# LANGUAGE UndecidableInstances #-}
 {-# OPTIONS_GHC -fno-warn-orphans -Wno-redundant-constraints #-}
 module DB.User where
@@ -10,8 +9,8 @@ import qualified Data.Password.Argon2 as Argon2
 import Data.Time (UTCTime)
 import Data.UUID (UUID)
 import qualified Data.UUID as UUID
-import Database.PostgreSQL.Entity (Entity (..), delete, insert, selectById,
-                                   selectOneByField)
+import Database.PostgreSQL.Entity (delete, insert, selectById, selectOneByField)
+import Database.PostgreSQL.Entity.Types
 import Database.PostgreSQL.Simple (Only (Only))
 import Database.PostgreSQL.Simple.FromField (FromField (..))
 import Database.PostgreSQL.Simple.FromRow (FromRow (..))
@@ -39,18 +38,8 @@ data User
          }
   deriving stock (Eq, Generic, Show)
   deriving anyclass (FromRow, ToRow)
-
-instance Entity User where
-  tableName = "users"
-  primaryKey = "user_id"
-  fields = [ "user_id"
-           , "username"
-           , "email"
-           , "display_name"
-           , "password"
-           , "created_at"
-           , "updated_at"
-           ]
+  deriving (Entity)
+    via (GenericEntity '[TableName "users"] User)
 
 -- | Type error! Do not use 'toJSON' on a 'Password'!
 instance TypeError (ErrMsg "JSON") => ToJSON Password where

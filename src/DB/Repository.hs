@@ -1,11 +1,11 @@
-{-# LANGUAGE OverloadedLists #-}
 module DB.Repository where
 
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Time (UTCTime)
 import Data.UUID (UUID)
-import Database.PostgreSQL.Entity (Entity (..), delete, insert, selectById,
+import Database.PostgreSQL.Entity (delete, insert, selectById,
                                    selectManyByField, selectOneByField)
+import Database.PostgreSQL.Entity.Types
 import Database.PostgreSQL.Simple (FromRow, Only (Only), ToRow)
 import Database.PostgreSQL.Simple.FromField (FromField)
 import Database.PostgreSQL.Simple.ToField (ToField)
@@ -31,19 +31,8 @@ data Repository
                }
     deriving stock (Eq, Generic, Show)
     deriving anyclass (FromRow, ToRow)
-
-instance Entity Repository where
-  tableName = "repositories"
-  primaryKey = "repository_id"
-  fields = [ "repository_id"
-           , "organisation_id"
-           , "repository_name"
-           , "repository_description"
-           , "repository_url"
-           , "repository_homepage"
-           , "created_at"
-           , "updated_at"
-           ]
+    deriving (Entity)
+      via (GenericEntity '[TableName "repositories"] Repository)
 
 insertRepository :: Repository -> DBT IO ()
 insertRepository repo = insert @Repository repo
