@@ -51,7 +51,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      filename: "../src/Web/Templates/Layout/layout.html",
+      filename: "../src/Templates/Layout/layout.html",
       template: "./layout.jinja.template",
       inject: false,
     }),
