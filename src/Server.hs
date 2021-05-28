@@ -117,12 +117,11 @@ appMain = do
 
     -- Generate a WAI Application from the foundation
     app <- makeWaiApplication foundation
-
+    let listenAddr = "http://localhost:" <> show matchmakerHttpPort
     greenMessage
-       $ "Running λ💜 Matchmaker 💜λ on port "
-      <> show matchmakerHttpPort
-      <> " loglevel is "
-      <> show matchmakerLogLevel
+       $ "<💜> Matchmaker listening on " <> listenAddr
+      <> "\n"
+      <> "<💜> Log level is " <> show matchmakerLogLevel
 
     -- Run the application with Warp
     runSettings (warpSettings foundation) app
