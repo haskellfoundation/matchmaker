@@ -3,16 +3,15 @@ module DB.Repository where
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Time (UTCTime)
 import Data.UUID (UUID)
-import Database.PostgreSQL.Entity (delete, insert, selectById,
-                                   selectManyByField, selectOneByField)
-import Database.PostgreSQL.Entity.Types
+import Data.Vector (Vector)
+import Database.PostgreSQL.Entity
 import Database.PostgreSQL.Simple (FromRow, Only (Only), ToRow)
 import Database.PostgreSQL.Simple.FromField (FromField)
 import Database.PostgreSQL.Simple.ToField (ToField)
 import Database.PostgreSQL.Transact (DBT)
 
 import DB.Organisation (OrganisationId (..))
-import Data.Vector (Vector)
+import Database.PostgreSQL.Entity.Types
 
 newtype RepositoryId
   = RepositoryId { getRepositoryId :: UUID }

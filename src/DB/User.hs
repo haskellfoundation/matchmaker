@@ -9,7 +9,7 @@ import qualified Data.Password.Argon2 as Argon2
 import Data.Time (UTCTime)
 import Data.UUID (UUID)
 import qualified Data.UUID as UUID
-import Database.PostgreSQL.Entity (delete, insert, selectById, selectOneByField)
+import Database.PostgreSQL.Entity
 import Database.PostgreSQL.Entity.Types
 import Database.PostgreSQL.Simple (Only (Only))
 import Database.PostgreSQL.Simple.FromField (FromField (..))
