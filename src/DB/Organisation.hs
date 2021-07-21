@@ -5,9 +5,7 @@ module DB.Organisation where
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Time (UTCTime)
 import Data.UUID (UUID)
-import Database.PostgreSQL.Entity (_select, _selectWhere, delete, insert,
-                                   selectById, selectOneByField, update)
-import Database.PostgreSQL.Entity.Types
+import Database.PostgreSQL.Entity
 import Database.PostgreSQL.Simple (FromRow, Only (Only), ToRow)
 import Database.PostgreSQL.Simple.FromField (FromField)
 import Database.PostgreSQL.Simple.ToField (ToField)
@@ -18,6 +16,7 @@ import Data.Maybe (fromJust)
 import Data.Vector (Vector)
 import Database.PostgreSQL.Entity.DBT (QueryNature (Select), query, queryOne,
                                        query_)
+import Database.PostgreSQL.Entity.Types
 import Database.PostgreSQL.Simple.SqlQQ (sql)
 
 newtype OrganisationId
@@ -49,15 +48,8 @@ data UserOrganisation
                      }
     deriving stock (Eq, Generic, Show)
     deriving anyclass (FromRow, ToRow)
-
-instance Entity UserOrganisation where
-    tableName = "user_organisation"
-    primaryKey = "user_organisation_id"
-    fields = [ "user_organisation_id"
-             , "user_id"
-             , "organisation_id"
-             , "is_admin"
-             ]
+    deriving Entity
+      via (GenericEntity '[TableName "user_organisation"] UserOrganisation)
 
 insertOrganisation :: Organisation -> DBT IO ()
 insertOrganisation org = insert @Organisation org
