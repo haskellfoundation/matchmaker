@@ -30,6 +30,5 @@ in with pkgs;
 
       # Extra
       direnv
-      parallel
     ];
   }
