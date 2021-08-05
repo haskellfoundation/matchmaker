@@ -10,4 +10,9 @@ let
   };
 
 in
-import nixpkgs { config = { }; }
+import nixpkgs {
+  config = { };
+  overlays = [
+    (import ./overlays/haskell-packages.nix)
+  ];
+}
