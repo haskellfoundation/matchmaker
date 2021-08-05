@@ -2,12 +2,13 @@ let pkgs = import ./nix/pkgs.nix;
     ghcidScript = pkgs.writeShellScriptBin "dev" "ghcid --command 'cabal new-repl lib:matchmaker' --allow-eval --warnings -o ghcid.text";
     formatScript = pkgs.writeShellScriptBin "format" "stylish-haskell -ir ./**/*.hs";
     runScript = pkgs.writeShellScriptBin "run" "cabal run exe:matchmaker";
-in with pkgs;
-  mkShell {
+in
+  pkgs.haskellPackages.matchmaker.env.overrideAttrs (old: {
     shellHook = ''
+      ${old.shellHook or ""}
       source environment.sh
     '';
-    buildInputs = [
+    buildInputs = with pkgs; (old.buildInputs or [ ]) ++ [
       # Haskell Deps
       haskell.compiler.ghc8104
       cabal-install
@@ -36,4 +37,4 @@ in with pkgs;
       formatScript
       runScript
     ];
-  }
+  })
