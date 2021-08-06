@@ -5,7 +5,6 @@ let pkgs = import (builtins.fetchTarball {
     }) { };
     ghcidScript = pkgs.writeShellScriptBin "dev" "ghcid --command 'cabal new-repl lib:matchmaker' --allow-eval --warnings -o ghcid.text";
     formatScript = pkgs.writeShellScriptBin "format" "stylish-haskell -ir ./**/*.hs";
-    runScript = pkgs.writeShellScriptBin "run" "cabal run exe:matchmaker";
 in with pkgs;
   mkShell {
     shellHook = ''
