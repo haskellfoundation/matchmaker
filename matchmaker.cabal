@@ -85,6 +85,7 @@ library
     Handler.Account.Create
     Handler.User
     ImportYesod
+    Integrations.GitHub
     Model.UserModel
     Server
     Templates
