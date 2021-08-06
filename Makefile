@@ -1,3 +1,7 @@
+ghcid: dev
+dev: ## Start ghcid
+	@ghcid --command 'cabal new-repl lib:matchmaker' --allow-eval --warnings -o ghcid.text
+
 start: ## Start the server
 	@cabal run exe:matchmaker
 
