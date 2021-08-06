@@ -23,14 +23,28 @@ The nix shell should source all environment variables when you enter it. Additio
 2.  `run` - This will run the matchmaker application
 3.  `format` - This will run `stylish-haskell` on all .hs files in the current directory and below
 
-## Run the backend
+## Running Matchmaker
+
+### Backend
 
 ```bash
+# Build `matchmaker` and its dependencies
 $ make deps
 $ make build
+
+# Initialize database configuration if you haven't already
+$ make db-init
+
+# Start the database
+$ make db-start
+
+# Run migrations against the running database (in another terminal)
 $ make db-setup
+
+# Start `matchmaker`
 $ make start
 ```
+
 ### Frontend
 
 ```bash
