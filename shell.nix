@@ -31,10 +31,5 @@ in with pkgs;
       # Extra
       direnv
       parallel
-
-      # Scripts
-      ghcidScript
-      formatScript
-      runScript
     ];
   }
