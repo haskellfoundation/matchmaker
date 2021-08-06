@@ -45,6 +45,7 @@ test: ## Run the test suite
 lint: ## Run the code linter (HLint)
 	@find app test src -name "*.hs" | parallel -j $(PROCS) -- hlint --refactor-options="-i" --refactor {}
 
+format: style
 style: ## Run the code styler (stylish-haskell)
 	@stylish-haskell -i -r src app test
 
