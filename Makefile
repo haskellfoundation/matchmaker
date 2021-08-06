@@ -24,10 +24,10 @@ assets-clean: ## Remove JS artifacts
 	@cd assets/ && rm -R node-modules
 
 db-init: ## Initialize the dev database
-	@initdb -D db
+	@initdb -D _database
 
 db-start: ## Start the dev database
-	@postgres -D db
+	@postgres -D _database
 
 db-setup: ## Setup the dev database
 	@createdb matchmaker_dev
