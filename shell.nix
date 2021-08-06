@@ -30,6 +30,7 @@ in with pkgs;
       gmp
       zlib
       glibcLocales
+      haskellPackages.postgresql-simple-migration
 
       # Extra
       direnv

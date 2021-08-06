@@ -2,7 +2,7 @@ start: ## Start the server
 	@cabal run matchmaker
 
 deps: ## Install the dependencies of the backend
-	@cabal install postgresql-simple-migration
+	@command -v migrate >/dev/null || cabal install postgresql-simple-migration
 	@cabal build --only-dependencies
 
 build: ## Build the project in fast mode
