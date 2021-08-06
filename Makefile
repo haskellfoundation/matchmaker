@@ -23,6 +23,12 @@ assets-watch: ## Continuously rebuild the web assets
 assets-clean: ## Remove JS artifacts
 	@cd assets/ && rm -R node-modules
 
+db-init: ## Initialize the dev database
+	@initdb -D db
+
+db-start: ## Start the dev database
+	@postgres -D db
+
 db-setup: ## Setup the dev database
 	@createdb matchmaker_dev
 	@cabal exec -- migrate init "$(echo $PG_CONNSTRING)" migrations
