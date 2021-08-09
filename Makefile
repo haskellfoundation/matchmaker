@@ -1,6 +1,6 @@
 ghcid: dev
 dev: ## Start ghcid
-	@ghcid --target lib:matchmaker --allow-eval --warnings -o ghcid.text
+	@ghcid --target lib:matchmaker --allow-eval --warnings
 
 start: ## Start the server
 	@cabal run exe:matchmaker
