@@ -17,11 +17,10 @@ and provide a smoother experience for people wishing to invest themselves in the
 There is a `shell.nix` file provided for convenience. However it is far from perfect.
 It will not manage a local installation of PostgreSQL for you.
 You should be able to work in a pure shell. If not, file a bug!
-The nix shell should source all environment variables when you enter it. Additionally it provides 3 convenience scripts:
+The nix shell should source all environment variables when you enter it.
 
-1.  `dev` - This will run ghcid with a couple flags enabled
-2.  `run` - This will run the matchmaker application
-3.  `format` - This will run `stylish-haskell` on all .hs files in the current directory and below
+The `Makefile` contains all the development-related scripts you'll need. Please
+refer to the output of `make help` for more information.
 
 ## Run the backend
 
