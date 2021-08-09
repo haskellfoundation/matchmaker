@@ -22,14 +22,28 @@ The nix shell should source all environment variables when you enter it.
 The `Makefile` contains all the development-related scripts you'll need. Please
 refer to the output of `make help` for more information.
 
-## Run the backend
+## Running Matchmaker
+
+### Backend
 
 ```bash
+# Build `matchmaker` and its dependencies
 $ make deps
 $ make build
+
+# Initialize database configuration if you haven't already
+$ make db-init
+
+# Start the database
+$ make db-start
+
+# Run migrations against the running database (in another terminal)
 $ make db-setup
+
+# Start `matchmaker`
 $ make start
 ```
+
 ### Frontend
 
 ```bash

@@ -6,7 +6,7 @@ start: ## Start the server
 	@cabal run exe:matchmaker
 
 deps: ## Install the dependencies of the backend
-	@cabal install postgresql-simple-migration
+	@command -v migrate >/dev/null || cabal install postgresql-simple-migration
 	@cabal build --only-dependencies
 
 build: ## Build the project in fast mode
@@ -26,6 +26,12 @@ assets-watch: ## Continuously rebuild the web assets
 
 assets-clean: ## Remove JS artifacts
 	@cd assets/ && rm -R node_modules
+
+db-init: ## Initialize the dev database
+	@initdb -D _database
+
+db-start: ## Start the dev database
+	@postgres -D _database
 
 db-setup: ## Setup the dev database
 	@createdb matchmaker_dev
