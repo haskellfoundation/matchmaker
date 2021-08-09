@@ -14,4 +14,4 @@ src/Templates/Layout/layout.html
 ghcid.text
 /**/ghcid.text
 client_session_key.aes
-db/
+_database/
