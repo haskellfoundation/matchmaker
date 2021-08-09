@@ -25,12 +25,12 @@ assets-watch: ## Continuously rebuild the web assets
 	@cd assets/ && yarn webpack -w --config webpack/webpack.config.js
 
 assets-clean: ## Remove JS artifacts
-	@cd assets/ && rm -R node-modules
+	@cd assets/ && rm -R node_modules
 
 db-setup: ## Setup the dev database
 	@createdb matchmaker_dev
-	@cabal exec -- migrate init "$(echo $PG_CONNSTRING)" migrations
-	@cabal exec -- migrate migrate "$(echo $PG_CONNSTRING)" migrations
+	@cabal exec -- migrate init "$(PG_CONNSTRING)" migrations
+	@cabal exec -- migrate migrate "$(PG_CONNSTRING)" migrations
 
 db-reset: ## Reset the dev database
 	@dropdb matchmaker_dev
@@ -43,7 +43,7 @@ test: ## Run the test suite
 	@cabal test
 
 lint: ## Run the code linter (HLint)
-	@find app test src -name "*.hs" | parallel -j $(PROCS) -- hlint --refactor-options="-i" --refactor {}
+	@find app test src -name "*.hs" | xargs -P $(PROCS) -I {} hlint --refactor-options="-i" --refactor {}
 
 format: style
 style: ## Run the code styler (stylish-haskell)
@@ -52,7 +52,13 @@ style: ## Run the code styler (stylish-haskell)
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.* ?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-PROCS := $(shell nproc)
+UNAME := $(shell uname)
+
+ifeq ($(UNAME), Darwin)
+	PROCS := $(shell sysctl -n hw.logicalcpu)
+else
+	PROCS := $(shell nproc)
+endif
 
 .PHONY: all $(MAKECMDGOALS)
 

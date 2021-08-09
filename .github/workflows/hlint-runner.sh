@@ -4,7 +4,7 @@ set -eux
 
 git add .
 
-find app src test -name "*.hs" | parallel -j $(nproc) -- hlint --refactor-options="-i" --refactor {}
+find app src test -name "*.hs" | xargs -P $(nproc) -I {} hlint --refactor-options="-i" --refactor {}
 
 git status
 
