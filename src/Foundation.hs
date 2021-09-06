@@ -2,8 +2,9 @@
 module Foundation where
 
 import DB
-import Database.PostgreSQL.Entity.DBT (ConnectionPool)
+import Data.Pool
 import qualified Database.PostgreSQL.Entity.DBT as ENT
+import Database.PostgreSQL.Simple
 import Database.PostgreSQL.Transact (DBT)
 import Network.HTTP.Client (HasHttpManager (..), Manager)
 import Prelude hiding (get)
@@ -19,7 +20,7 @@ import Yesod.Core.Types
 -- http managers should be stored. Generally environment variables are parsed at startup and
 -- put into this data type.
 data Foundation = Foundation
-    { appPgPool         :: ConnectionPool
+    { appPgPool         :: Pool Connection
     , appRoot           :: Maybe Text
     , appPort           :: Word16
     , appHttpManager    :: Manager
@@ -107,7 +108,7 @@ instance HasDB Handler where
   runDB :: DBT IO a -> Handler a
   runDB dbAction = do
     Foundation{..} <- getYesod
-    liftIO $ ENT.runDB appPgPool dbAction
+    liftIO $ ENT.withPool appPgPool dbAction
 
 instance MonadFail Handler where
   fail = liftIO . fail

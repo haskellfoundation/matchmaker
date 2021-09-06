@@ -58,7 +58,7 @@ getOrganisationById :: OrganisationId -> DBT IO (Maybe Organisation)
 getOrganisationById orgId = selectById @Organisation (Only orgId)
 
 getOrganisationByName :: Text -> DBT IO (Maybe Organisation)
-getOrganisationByName name = selectOneByField "organisation_name" (Only name)
+getOrganisationByName name = selectOneByField [field| organisation_name |] (Only name)
 
 deleteOrganisation :: OrganisationId -> DBT IO ()
 deleteOrganisation orgId = delete @Organisation (Only orgId)
@@ -71,7 +71,7 @@ getUserOrganisationById uoId = selectById @UserOrganisation (Only uoId)
 
 getUserOrganisation :: UserId -> OrganisationId -> DBT IO (Maybe UserOrganisation)
 getUserOrganisation userId orgId = queryOne Select q (userId, orgId)
-    where q = _selectWhere @UserOrganisation ["user_id", "organisation_id"]
+    where q = _selectWhere @UserOrganisation [[field| user_id |], [field| organisation_id |]]
 
 makeAdmin :: UserId -> OrganisationId -> DBT IO ()
 makeAdmin userId organisationId = do

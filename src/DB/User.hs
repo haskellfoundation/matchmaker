@@ -1,4 +1,5 @@
 {-# LANGUAGE DerivingVia          #-}
+{-# LANGUAGE QuasiQuotes          #-}
 {-# LANGUAGE UndecidableInstances #-}
 {-# OPTIONS_GHC -fno-warn-orphans -Wno-redundant-constraints #-}
 module DB.User where
@@ -72,10 +73,10 @@ getUserById :: HasCallStack => UserId -> DBT IO (Maybe User)
 getUserById userId = selectById (Only userId)
 
 getUserByUsername :: HasCallStack => Text -> DBT IO (Maybe User)
-getUserByUsername username = selectOneByField "username" (Only username)
+getUserByUsername username = selectOneByField [field| username |] (Only username)
 
 getUserByEmail :: HasCallStack => Text -> DBT IO (Maybe User)
-getUserByEmail email = selectOneByField "email" (Only email)
+getUserByEmail email = selectOneByField [field| email |] (Only email)
 
 deleteUser :: HasCallStack => UserId -> DBT IO ()
 deleteUser userId = delete @User (Only userId)

@@ -3,9 +3,9 @@ name:             matchmaker
 version:          0.0.1.0
 homepage:         https://github.com/haskellfoundation/matchmaker#readme
 bug-reports:      https://github.com/haskellfoundation/matchmaker/issues
-author:           Hécate Moonlight
-maintainer:       Hécate Moonlight
-license:          MIT
+author:           Hécate Moonlight & contributors
+maintainer:       Hécate Moonlight & contributors
+license:          Apache-2.0
 build-type:       Simple
 extra-source-files:
     CHANGELOG.md
@@ -121,7 +121,7 @@ library
     mtl                         ^>= 2.2.2,
     password                    ^>= 3.0,
     pg-entity                   ^>= 0.0,
-    pg-transact                 ^>= 0.3,
+    pg-transact                 ^>= 0.3.2,
     postgresql-simple           ^>= 0.6,
     postgresql-simple-migration ^>= 0.1,
     relude                      ^>= 1.0,
@@ -182,7 +182,7 @@ test-suite matchmaker-test
     , base
     , hspec
     , hspec-expectations-lifted
-    , hspec-pg-transact
+    , hspec-pg-transact == 0.1.0.3
     , matchmaker
     , password
     , postgresql-simple

@@ -1,3 +1,4 @@
+{-# LANGUAGE QuasiQuotes #-}
 module DB.Repository where
 
 import Data.Aeson (FromJSON, ToJSON)
@@ -40,10 +41,10 @@ getRepository :: RepositoryId -> DBT IO (Maybe Repository)
 getRepository repoId = selectById @Repository (Only repoId)
 
 getRepositoriesByOrg :: OrganisationId -> DBT IO (Vector Repository)
-getRepositoriesByOrg orgId = selectManyByField @Repository "organisation_id" (Only orgId)
+getRepositoriesByOrg orgId = selectManyByField @Repository [field| organisation_id |] (Only orgId)
 
 getRepositoryByName :: Text -> DBT IO (Maybe Repository)
-getRepositoryByName name = selectOneByField "repository_name" (Only name)
+getRepositoryByName name = selectOneByField [field| repository_name |] (Only name)
 
 deleteRepository :: RepositoryId -> DBT IO ()
 deleteRepository repoId = delete @Repository (Only repoId)
