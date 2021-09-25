@@ -194,6 +194,7 @@ test-suite matchmaker-test
     DB.UserSpec
     DB.SpecHelpers
     DB.OrganisationSpec
+    Web.AccountCreationSpec
   mixins: base hiding (Prelude)
         , relude ( Relude as Prelude
                  , Relude.Unsafe)
