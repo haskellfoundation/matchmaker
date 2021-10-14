@@ -1,4 +1,4 @@
-{-# LANGUAGE LambdaCase      #-}
+
 {-# LANGUAGE OverloadedLists #-}
 {-# OPTIONS_GHC -Wno-unused-imports #-}
 
