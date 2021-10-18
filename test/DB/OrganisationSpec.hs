@@ -1,3 +1,4 @@
+
 {-# LANGUAGE OverloadedLists #-}
 {-# OPTIONS_GHC -Wno-unused-imports #-}
 
@@ -8,13 +9,13 @@ import Data.UUID.V4
 import Relude.Unsafe (read)
 import Test.Hspec (Spec)
 import Test.Hspec.DB (describeDB, itDB)
-import Test.Hspec.Expectations.Lifted (shouldReturn)
+import Test.Hspec.Expectations.Lifted (expectationFailure, shouldReturn)
 
 import DB.Organisation (Organisation (..), OrganisationId (..),
                         UserOrganisationId (..), attachUser, getAdmins,
-                        getAllUserOrganisations, getUserOrganisation,
-                        getUserOrganisationById, getUsers, insertOrganisation,
-                        makeAdmin)
+                        getAllUserOrganisations, getOrganisationByName,
+                        getUserOrganisation, getUserOrganisationById, getUsers,
+                        insertOrganisation, makeAdmin)
 import DB.SpecHelpers (migrate)
 import DB.User
 

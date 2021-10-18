@@ -16,6 +16,7 @@ data NewUserValidationError
   | TooShortPassword
   | InvalidEmailAddress
   | MissingField Text
+  deriving Show
 
 instance ErrorToAssign NewUserValidationError where
   putErrorAssign err =
